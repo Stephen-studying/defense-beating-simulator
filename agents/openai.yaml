@@ -1,0 +1,7 @@
+interface:
+  display_name: "答辩挨打模拟器"
+  short_description: "模拟答辩追问，定位项目漏洞，生成稳妥回答与速查卡。"
+  default_prompt: "Use $defense-beating-simulator to analyze my project README or report, choose an intensity, and generate defense questions, weaknesses, and a cheat sheet."
+
+policy:
+  allow_implicit_invocation: true
