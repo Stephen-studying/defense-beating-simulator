@@ -65,7 +65,7 @@ sh install.sh --agent codex --force
 安装后重启 Codex，然后这样调用：
 
 ```text
-Use $defense-beating-simulator 分析我的项目 README，场景为保研面试，强度选择“严刑拷打”。
+请用 $defense-beating-simulator 分析我的项目 README，场景为保研面试，强度选择“严刑拷打”。
 ```
 
 ## 校验
