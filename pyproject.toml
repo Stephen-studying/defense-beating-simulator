@@ -1,0 +1,15 @@
+[project]
+name = "defense-beating-simulator"
+version = "0.1.0"
+description = "答辩挨打模拟器：从项目材料生成答辩追问、薄弱点诊断和速查卡的 Codex Skill。"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+keywords = ["codex", "skill", "defense", "interview", "student-project"]
+
+[project.scripts]
+defense-skill-validate = "scripts.validate_skill:main"
+
+[tool.defense-beating-simulator]
+skill_name = "defense-beating-simulator"
+display_name = "答辩挨打模拟器"
