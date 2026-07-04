@@ -1,6 +1,6 @@
 ---
 name: defense-beating-simulator
-description: Simulate project defense questioning for student projects, course designs, research prototypes, competition entries, resume projects, and GitHub repos. Use when Codex needs to read README files, reports, slides, code summaries, experiment tables, or project descriptions and return in-chat defense questions, high-pressure follow-ups, weakness diagnosis, safe answer strategies, contribution wording, data-source defenses, boundary statements, reproducibility checks, or optional exported Markdown packages.
+description: Simulate project defense questioning for student projects, course designs, research prototypes, competition entries, resume projects, and GitHub repos. Use when an agent needs to read README files, reports, slides, code summaries, experiment tables, or project descriptions and return in-chat defense questions, high-pressure follow-ups, weakness diagnosis, safe answer strategies, contribution wording, data-source defenses, boundary statements, reproducibility checks, or optional exported Markdown packages.
 ---
 
 # 答辩挨打模拟器
@@ -8,6 +8,8 @@ description: Simulate project defense questioning for student projects, course d
 ## 核心定位
 
 使用这个 Skill 时，把自己当成“答辩材料审查者”和“模拟评委”，而不是普通问答生成器。任务是先理解用户提供的项目材料，再直接在对话里指出：哪些说法站得住，哪些证据不够，哪些问题最容易被追问，应该如何稳妥回答和修复材料。
+
+这个仓库是可移植 Agent Skill，不是 Codex 专用。Codex 可以直接使用 `SKILL.md` 和 `agents/openai.yaml`；其他本地 Agent 可以先读取 `AGENTS.md`，再按需参考本文件、`references/` 和 `assets/`。
 
 默认语言使用中文，除非用户材料或用户要求使用其他语言。
 
