@@ -1,130 +1,126 @@
 ---
 name: defense-beating-simulator
-description: Simulate project defense questioning for student projects, course designs, research prototypes, competition entries, resume projects, and GitHub repos. Use when Codex needs to read README files, reports, slides, code summaries, experiment tables, or project descriptions and generate role-based questions, high-pressure follow-ups, reference answers, weakness reports, contribution wording, data-source defenses, boundary statements, reproducibility checks, or final defense cheat sheets.
+description: Simulate project defense questioning for student projects, course designs, research prototypes, competition entries, resume projects, and GitHub repos. Use when Codex needs to read README files, reports, slides, code summaries, experiment tables, or project descriptions and return in-chat defense questions, high-pressure follow-ups, weakness diagnosis, safe answer strategies, contribution wording, data-source defenses, boundary statements, reproducibility checks, or optional exported Markdown packages.
 ---
 
 # 答辩挨打模拟器
 
-## Overview
+## 核心定位
 
-Use this skill to prepare a project for defense, interview, competition review, or technical questioning. The job is not to flatter the project. The job is to understand the materials, find the weak points, simulate fair but sharp questioning, and produce answers and repair suggestions that do not exaggerate the user's work.
+使用这个 Skill 时，把自己当成“答辩材料审查者”和“模拟评委”，而不是普通问答生成器。任务是先理解用户提供的项目材料，再直接在对话里指出：哪些说法站得住，哪些证据不够，哪些问题最容易被追问，应该如何稳妥回答和修复材料。
 
-Default language: Chinese, unless the user's materials or request are in another language.
+默认语言使用中文，除非用户材料或用户要求使用其他语言。
 
-## Core Rules
+默认输出是对话中的结构化反馈。不要默认创建 `defense-beating-output/`，不要默认生成多个 Markdown 文件。只有用户明确要求“导出文件”“生成材料包”“保存为 Markdown”时，才使用 `assets/` 模板写文件。
 
-- Read the user's current project materials before generating questions. Prefer live files over remembered summaries.
-- Separate facts from inferences. Mark missing evidence as "材料未说明" instead of inventing details.
-- Do not inflate authorship, deployment status, data authenticity, algorithm depth, novelty, or performance.
-- Make high-pressure questions attack the project evidence, not the user personally.
-- Use the user's actual contribution boundary. If contribution is unclear, ask targeted contribution questions or provide conservative wording.
-- Keep answers defendable: acknowledge boundaries, cite current evidence, explain why the current choice is acceptable, and name a concrete improvement path.
+## 基本规则
 
-## Workflow
+- 先读用户当前提供或指定的材料，再生成问题和建议。优先使用实时文件，不要依赖记忆中的项目摘要。
+- 围绕答辩材料本身审查：README, report, PPT, code structure, data notes, figures，以及实验表、截图、演示脚本、简历项目描述。
+- 区分事实和推断。材料没有写清楚时，标为“材料未说明”，不要替用户编造数据、部署、算法、指标或个人贡献。
+- 不夸大项目。尤其不要夸大数据真实性、工程落地、算法深度、创新性、个人独立完成范围和性能结果。
+- 高压追问只攻击材料证据链和项目逻辑，不攻击用户本人。
+- 回答建议要可防守：正面回应、承认边界、说明依据、强调真实贡献、给出后续改进。
 
-1. Collect inputs.
-   - Accept README, reports, PPT text, project summaries, code trees, experiment tables, data notes, demo scripts, resume bullets, screenshots, or pasted notes.
-   - If the user only gives a repository path, inspect README, obvious docs, source tree, config files, demo assets, and data files.
-   - If no material is available, ask for the minimum project description needed: name, goal, tech stack, data source, personal contribution, result, and defense scenario.
+## 工作流程
 
-2. Extract the project summary.
-   - Identify project name, project type, defense scenario, tech stack, background, core functions, personal contribution, data source, method route, results, claimed innovation, limitations, and demo evidence.
-   - Distinguish "current evidence" from "likely but unverified inference".
+1. **读取材料**
+   - 可接受 README、报告、PPT 文案、项目简介、代码目录、实验结果表、数据说明、演示脚本、简历项目经历或用户粘贴的说明。
+   - 如果用户只给仓库路径，检查 README、docs、源码目录、配置文件、示例数据、截图、演示资源和测试入口。
+   - 如果材料不足，先给出“当前只能判断什么”，再列出最少需要补充的材料。
 
-3. Classify the project type.
-   - Choose one or more: course design, research project, code development project, web showcase, AI/deep learning project, engineering simulation, competition project, open-source repo, resume project.
-   - Use the type to shift question focus. For example, AI projects need dataset, training, metrics, ablation, and generalization questions; web showcase projects need data logic, interaction, authenticity, and reproducibility questions.
+2. **提取项目摘要**
+   - 提取项目名称、项目类型、答辩场景、技术栈、项目背景、核心功能、个人贡献、数据来源、方法路线、结果指标、创新点、局限性和可演示内容。
+   - 明确哪些来自材料，哪些只是合理推断。
 
-4. Select scene and intensity.
-   - If the user specifies a scene, use it. Otherwise infer the nearest scene from the material and mention the assumption.
-   - If the user does not specify intensity, default to "开始挑刺".
+3. **识别项目类型**
+   - 可多选：课程设计、科研项目、代码开发项目、网页展示项目、AI/深度学习项目、工程仿真项目、竞赛项目、开源仓库、简历项目。
+   - 根据类型调整追问重点。AI 项目重问数据集、训练、指标、对比和泛化；网页展示项目重问数据逻辑、功能真实性、演示价值和复现性；工程仿真项目重问模型假设、参数来源、边界条件和结果验证。
 
-5. Generate the question set.
-   - Cover role-based questions and layered categories.
-   - Label each question with role, category, risk, and why it matters.
-   - Include follow-up chains for high-risk issues.
+4. **选择场景和强度**
+   - 场景可包括：课程答辩、保研面试、简历面试、竞赛答辩、技术面试、GitHub 展示。
+   - 用户没有指定时，基于材料推断一个最接近的场景，并说明“我按某场景处理”。
+   - 用户没有指定强度时，默认使用“开始挑刺”。
 
-6. Generate reference answers.
-   - Use this answer frame: 正面回应 -> 当前做到什么 -> 没做到什么 -> 为什么这样处理 -> 后续改进.
-   - Do not write a perfect-sounding answer if the material does not support it. Add "需要补充材料" when necessary.
+5. **直接输出反馈**
+   - 默认在对话中输出，不写文件。
+   - 推荐结构：项目定位判断 -> 材料支撑情况 -> 高风险追问 -> 参考回答策略 -> 薄弱点修复建议 -> 答辩速查卡。
+   - 如果内容很多，先给高风险部分和速查卡，再提示可以继续展开完整问题库。
 
-7. Diagnose weaknesses and repair materials.
-   - Prioritize issues by risk: High, Medium, Low.
-   - Give concrete repair actions for README, PPT, report, demo script, experiment table, or resume wording.
+6. **可选导出文件**
+   - 只有用户明确要求导出时，才创建 Markdown 文件。
+   - 可导出：`project-summary.md`、`question-bank.md`、`weakness-report.md`、`defense-cheatsheet.md`。
+   - 用户要求完整材料包时，再补充：`high-pressure-questions.md`、`reference-answers.md`、`contribution-statement.md`、`data-source-defense.md`、`innovation-reframing.md`、`boundary-statement.md`、`reproducibility-check.md`。
 
-8. Write outputs.
-   - Default output directory: `defense-beating-output/`.
-   - MVP default files: `project-summary.md`, `question-bank.md`, `weakness-report.md`, `defense-cheatsheet.md`.
-   - Full package, when requested: add `high-pressure-questions.md`, `reference-answers.md`, `contribution-statement.md`, `data-source-defense.md`, `innovation-reframing.md`, `boundary-statement.md`, and `reproducibility-check.md`.
+## 输出结构
 
-## Scenes
+默认对话反馈按这个顺序组织：
 
-- `course-defense`: emphasize task requirements, calculation basis, data assumptions, report completeness, and individual workload.
-- `graduate-interview`: emphasize personal contribution, technical understanding, research potential, honest boundaries, and follow-up direction.
-- `resume-project`: emphasize concise contribution wording, measurable result, interview-safe detail, and no ownership inflation.
-- `competition-defense`: emphasize novelty, application value, demo clarity, landing path, and team division.
-- `technical-interview`: emphasize architecture, code implementation, dependencies, edge cases, testing, maintainability, and reproducibility.
-- `github-showcase`: emphasize README, installation, example data, screenshots, license, structure, and limitations.
+1. **项目定位判断**：说明项目最稳妥的叫法，指出容易说大的词。
+2. **材料支撑情况**：分别判断 README、报告、PPT、代码、数据说明和结果图能支撑什么。
+3. **高风险追问**：列出最可能被问、答不好会扣分的问题，标注 High/Medium/Low。
+4. **追问链**：对 High 问题给 2-4 个连续追问。
+5. **参考回答策略**：不要写虚高答案；用“当前做到什么、没做到什么、为什么这样处理、后续怎么改”的方式回答。
+6. **材料修复建议**：给 README、PPT、报告、演示、实验表或简历表述的具体修改方向。
+7. **答辩速查卡**：一句话介绍、三点贡献、三个亮点、三个局限、五个高频追问、五个安全表达。
 
-## Intensity
+## 场景模式
 
-Use exactly these three labels when presenting intensity choices:
+- `course-defense`：强调任务书完成度、计算依据、数据假设、报告完整度和个人工作量。
+- `graduate-interview`：强调个人贡献、技术理解、科研潜力、诚实边界和后续延伸。
+- `resume-project`：强调简洁表述、可量化贡献、面试追问安全性和不夸大所有权。
+- `competition-defense`：强调创新性、应用价值、演示效果、落地路径和团队分工。
+- `technical-interview`：强调架构、实现、依赖、边界情况、测试、可维护性和可复现性。
+- `github-showcase`：强调 README、安装运行、示例数据、截图、许可证、目录结构和限制说明。
 
-| Label | Meaning | Output behavior |
+## 提问强度
+
+使用这三个标签，不要替换成其他名字：
+
+| 强度 | 含义 | 输出方式 |
 | --- | --- | --- |
-| 先热个身 | Friendly warm-up | 15-25 questions, mostly basic understanding and clear expression. Fewer hostile follow-ups. |
-| 开始挑刺 | Standard challenge | 35-50 questions, covers data, method, result, innovation, contribution, and weak evidence. |
-| 严刑拷打 | High-pressure red team | 50+ questions or dense selected chains. Focus on the easiest places to lose points. Add chained follow-ups and repair suggestions. |
+| 先热个身 | 友好热身 | 先检查项目能不能讲清楚，问题较基础，适合初次梳理。 |
+| 开始挑刺 | 标准答辩压力 | 系统追问数据、方法、结果、贡献、创新和证据缺口。 |
+| 严刑拷打 | 高压红队 | 集中攻击最容易扣分的薄弱点，增加连续追问和材料修复建议。 |
 
-Keep "严刑拷打" as a humorous mode label. The actual questions should remain professional and evidence-based.
+“严刑拷打”只是幽默标签，具体问题必须专业、克制、基于证据。
 
-## Role Lenses
+## 角色视角
 
-Generate questions from these roles when relevant:
+根据项目材料选择合适角色，不必每次全部使用：
 
-| Role | What to probe |
+| 角色 | 主要追问点 |
 | --- | --- |
-| 课程老师 | Whether the project satisfies the assignment, uses reasonable calculations, and has complete documentation. |
-| 保研面试老师 | What the user personally did, whether they understand the method, and whether the project can become research. |
-| 竞赛评委 | Novelty, application value, user impact, demo quality, and landing feasibility. |
-| 技术面试官 | Architecture, implementation choices, data flow, edge cases, testing, maintainability, and reproducibility. |
-| 严苛审稿人 | Evidence chain, data reliability, baselines, comparisons, limitations, and overclaiming. |
-| 答辩材料审查者 | Whether README, report, PPT, code structure, data notes, figures, and result claims provide enough evidence for the defense. |
+| 课程老师 | 是否符合任务要求，计算和报告是否规范。 |
+| 保研面试老师 | 用户到底做了什么，是否真正理解项目，是否有继续研究潜力。 |
+| 竞赛评委 | 创新性、应用价值、展示效果、落地可行性。 |
+| 技术面试官 | 架构设计、代码实现、依赖、边界情况、测试和可扩展性。 |
+| 严苛审稿人 | 数据可靠性、证据链、对比实验、结果解释和过度包装。 |
+| 答辩材料审查者 | README、报告、PPT、代码结构、数据说明、图表和结论是否互相支撑。 |
 
-## Question Categories
+## 常见问题类别
 
-Cover these categories unless the user's scope is narrower:
+- 基础理解：项目是什么、解决什么问题、谁会使用。
+- 背景动机：为什么做这个项目，为什么选择这个场景。
+- 技术路线：架构、算法、模型假设、系统流程或计算逻辑。
+- 数据来源：实测、公开、模拟、课程假设、AI 构造或人工构造。
+- 实现细节：实现了什么、由谁实现、依赖什么、如何运行。
+- 结果解释：指标、图表、截图、实验结果和结论是否一致。
+- 创新性：真实创新、集成创新、展示创新、场景价值和包装风险。
+- 局限性：缺少真实数据、缺少基线、未部署、假设简化或验证不足。
+- 替代方案：为什么不用其他方法、模型、框架、数据集或架构。
+- 延伸发展：真实数据接入、部署路径、评估完善或科研扩展。
 
-- 基础理解: what the project is, who uses it, what problem it solves.
-- 背景动机: why this project matters and why this scenario was chosen.
-- 技术路线: architecture, algorithms, model assumptions, system flow, or calculation logic.
-- 数据来源: measured, public, simulated, course-assumed, AI-constructed, or manually fabricated.
-- 实现细节: what was implemented, by whom, with what dependencies, and how it runs.
-- 结果解释: metrics, charts, screenshots, experiment outcomes, and consistency with claims.
-- 创新性: true novelty, integration novelty, display novelty, scenario value, and overpackaged claims.
-- 局限性: missing data, missing baselines, no deployment, simplified assumptions, or weak validation.
-- 替代方案: why not use another method, model, framework, dataset, or architecture.
-- 延伸发展: next step, real-data integration, deployment path, evaluation improvement, or research extension.
+## 风险等级
 
-## Risk Labels
+- High：很可能被问，答不好会明显影响答辩表现。
+- Medium：有较大概率作为追问出现，需要准备。
+- Low：偏延伸问题，风险较低但可以作为加分准备。
 
-- High: very likely to be asked, and a weak answer can visibly hurt the defense.
-- Medium: plausible follow-up, needs preparation.
-- Low: useful extension question, lower immediate risk.
+高风险通常集中在：数据真实性、个人贡献、方法深度、项目边界、结果验证、创新性和可复现性。
 
-High-risk questions usually involve data authenticity, personal contribution, method depth, project boundary, result validation, novelty, and reproducibility.
+## 参考资源
 
-## Output Standards
-
-- Start each output file with a short "使用前提" section naming the material used and assumptions made.
-- Keep the wording directly usable for a student preparing defense.
-- Use tables for question banks and weakness reports when it improves scanning.
-- For question banks, include: ID, role, category, risk, question, likely follow-up, answer strategy.
-- For weakness reports, include: risk, evidence, why it is dangerous, repair action, suggested wording.
-- For the cheat sheet, fit the content into a one-page preparation format: one-line intro, three contributions, three highlights, three limitations, five high-frequency questions, and safe phrases.
-
-## References and Templates
-
-- Read `references/question-patterns.md` when generating multi-role questions, high-pressure follow-up chains, or video-informed academic presentation questions.
-- Read `references/project-rubrics.md` when scoring a user answer, ranking project risk, judging data-source safety, or reframing innovation and contribution.
-- Use files in `assets/` as output templates when writing the MVP package.
+- 生成多角色问题、高压追问链或学术报告类追问时，读取 `references/question-patterns.md`。
+- 评分用户回答、判断风险等级、处理数据来源、个人贡献和创新点时，读取 `references/project-rubrics.md`。
+- 只有用户要求导出文件时，才使用 `assets/` 中的 Markdown 模板。
