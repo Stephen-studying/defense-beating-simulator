@@ -2,18 +2,18 @@
 
 # 答辩挨打模拟器
 
-一个专门帮你提前发现项目答辩漏洞的 Codex Skill。
+一个专门帮你提前发现项目答辩漏洞的 Agent Skill。
 
 它读取 README、报告、PPT 文案、代码结构和数据说明，然后直接在对话里给出追问、薄弱点、稳妥回答和修改建议。
 
-`defense-beating-simulator`
+`defense-beating-simulator` · 可安装到 Codex，也可安装到其他支持本地指令/技能目录的 Agent
 
 </div>
 
 <details>
 <summary>English Overview</summary>
 
-**Defense Beating Simulator** is a Codex Skill for project defense preparation. It reads project materials such as README files, reports, slide text, code structure, data notes, and experiment results, then returns an in-chat defense review: role-based questions, high-pressure follow-ups, weakness diagnosis, safe answer strategies, and material repair suggestions. Markdown files are generated only when the user explicitly asks for an exported package.
+**Defense Beating Simulator** is a portable Agent Skill for project defense preparation. It can be installed into Codex or into a generic local agent skill directory. It reads project materials such as README files, reports, slide text, code structure, data notes, and experiment results, then returns an in-chat defense review: role-based questions, high-pressure follow-ups, weakness diagnosis, safe answer strategies, and material repair suggestions. Markdown files are generated only when the user explicitly asks for an exported package.
 
 </details>
 
@@ -22,6 +22,16 @@
 答辩挨打模拟器不是普通的“生成几个问题”，也不是演讲稿润色工具。它更像一个提前上岗的答辩评委：先读你的项目材料，再判断哪些说法站得住、哪些证据不够、哪些地方最容易被老师继续追问。
 
 它默认直接在聊天里反馈结果，不会一上来就生成一堆文件。这样用户可以马上看到重点问题，直接修改 README、PPT、报告或答辩口径。
+
+## 不只支持 Codex
+
+这个仓库按“可移植 Skill”设计，不绑定单一 Agent：
+
+- **Codex**：读取 `SKILL.md` 和 `agents/openai.yaml`，按 Codex Skill 方式调用。
+- **其他本地 Agent**：读取 `AGENTS.md` 作为通用入口，再按需参考 `SKILL.md`、`references/` 和 `assets/`。
+- **不支持自动发现 Skill 的 Agent**：把 `AGENTS.md` 作为项目级指令，把 `SKILL.md` 作为详细工作流说明即可。
+
+通用安装模式会把整个技能目录复制到 `AGENT_SKILLS_HOME`，如果没有设置这个环境变量，则默认使用 `~/.agent-skills`。
 
 ## 适合什么项目
 
@@ -60,14 +70,16 @@
 
 ## 使用方式
 
+Codex 中可以这样调用：
+
 ```text
 请用 $defense-beating-simulator 分析我的项目 README，场景为保研面试，强度选择“严刑拷打”。
 ```
 
-也可以指定重点：
+其他 Agent 中可以直接要求它按本仓库的 `AGENTS.md` / `SKILL.md` 工作：
 
 ```text
-请重点拷问数据来源、个人贡献和创新点，不要生成文件，直接在对话里反馈。
+请按照 defense-beating-simulator 的规则分析我的项目材料，重点拷问数据来源、个人贡献和创新点，不要生成文件，直接在对话里反馈。
 ```
 
 ## 实际案例
@@ -106,8 +118,8 @@ README 里需要新增“数据来源与假设”小节；PPT 中不要只放能
 
 ```text
 defense-beating-simulator/
-├── SKILL.md                  # Codex 技能入口，定义默认工作流和输出规则
-├── AGENTS.md                 # 给通用本地智能体读取的入口说明
+├── SKILL.md                  # Codex/OpenAI Skill 入口，也是完整工作流说明
+├── AGENTS.md                 # 通用 Agent 入口，适合非 Codex Agent 先读取
 ├── agents/
 │   └── openai.yaml           # Codex 技能列表中的展示名称、简介和默认提示
 ├── references/
@@ -124,13 +136,15 @@ defense-beating-simulator/
 │   └── validate_skill.py      # 无第三方依赖的技能包校验脚本
 ├── tests/
 │   └── test_skill_package.py  # 基础测试，确认入口、规则和模板存在
-├── install.ps1                # Windows / PowerShell 安装脚本
-├── install.sh                 # macOS / Linux shell 安装脚本
+├── install.ps1                # Windows / PowerShell 安装脚本，支持 codex 和 generic
+├── install.sh                 # macOS / Linux shell 安装脚本，支持 codex 和 generic
 ├── pyproject.toml             # 项目元信息
 └── README.md                  # 仓库主页
 ```
 
 ## 安装
+
+### 安装到 Codex
 
 PowerShell：
 
@@ -145,6 +159,48 @@ sh install.sh --agent codex --force
 ```
 
 安装后重启 Codex，让新的 Skill 被重新加载。
+
+### 安装到其他 Agent
+
+PowerShell：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent generic -Force
+```
+
+macOS / Linux：
+
+```bash
+sh install.sh --agent generic --force
+```
+
+默认安装位置：
+
+```text
+Windows: %USERPROFILE%\.agent-skills\defense-beating-simulator
+macOS/Linux: ~/.agent-skills/defense-beating-simulator
+```
+
+安装后，让你的 Agent 读取下面任意一个入口：
+
+```text
+AGENTS.md  # 通用入口，适合大多数本地 Agent
+SKILL.md   # 完整工作流，适合支持 Skill/工具说明的 Agent
+```
+
+### 自定义安装目录
+
+PowerShell：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent generic -Destination "D:\AgentSkills" -Force
+```
+
+macOS / Linux：
+
+```bash
+sh install.sh --agent generic --dest "$HOME/agent-skills" --force
+```
 
 ## 校验
 
