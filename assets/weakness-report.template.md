@@ -1,46 +1,45 @@
-# Weakness Report
+# Defense Weakness Report
 
-## 使用前提
+## 1. Overall Risk Level
 
-- 材料来源：
-- 答辩场景：
-- 提问强度：
-- 诊断范围：
+- Overall risk: High / Medium / Low
+- Main reason:
+- Priority repair area:
 
-## 高风险问题
+## 2. Weakness Table
 
-| Risk | Weak Point | Evidence | Why It Is Dangerous | Repair Action | Safer Wording |
+| Risk | Weak Point | Material Evidence | Why It Is Dangerous | Repair Action | Safer Wording |
 | --- | --- | --- | --- | --- | --- |
-| High |  |  |  |  |  |
+| High | 数据来源未说明 | README 未看到数据来源小节 | 老师可能连续追问数据真实性，导致结论可信度下降 | 新增“数据来源与假设”小节 | 当前数据基于典型工况构造，主要用于趋势展示 |
 
-## 中风险问题
-
-| Risk | Weak Point | Evidence | Repair Action |
-| --- | --- | --- | --- |
-| Medium |  |  |  |
-
-## 低风险优化
+## 3. Top Repair Actions
 
 1. 
 2. 
 3. 
 
-## 材料修复建议
+## 4. Safe Answer Bank
+
+| Question | Unsafe Answer | Safer Answer |
+| --- | --- | --- |
+| 你的数据真实吗？ | 都是真实的 | 本项目部分数据为典型工况构造，主要用于展示系统逻辑 |
+
+## 5. Material Repair Checklist
 
 ### README
 
-1. 
-2. 
-3. 
+- [ ] Add project boundary statement.
+- [ ] Add data source and assumptions.
+- [ ] Add run command or demo path.
+- [ ] Add screenshots or result figures.
 
-### PPT 或报告
+### PPT / Report
 
-1. 
-2. 
-3. 
+- [ ] Match claims with figures or tables.
+- [ ] Explain data and parameter sources.
+- [ ] Separate current implementation from future work.
 
-### 简历或口头表达
+### Resume / Oral wording
 
-| 原表达 | 风险 | 建议表达 |
-| --- | --- | --- |
-|  |  |  |
+- [ ] Distinguish personal contribution from team work.
+- [ ] Avoid saying deployment, real-time, optimal, or original unless supported.
