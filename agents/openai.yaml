@@ -1,7 +1,7 @@
 interface:
   display_name: "答辩挨打模拟器"
-  short_description: "围绕答辩材料直接反馈追问、薄弱点、稳妥回答和修改建议。"
-  default_prompt: "请用 $defense-beating-simulator 分析我的项目 README 或报告，选择提问强度，并直接在对话里反馈答辩追问、薄弱点和修改建议。"
+  short_description: "先审查项目证据链，再生成高风险追问、稳妥回答和材料修复建议。"
+  default_prompt: "请用 $defense-beating-simulator 审查我的项目答辩材料，先做 Claim-Evidence Matrix，再给出高风险追问、稳妥回答和修复建议。"
 
 policy:
   allow_implicit_invocation: true
