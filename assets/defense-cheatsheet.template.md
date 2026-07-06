@@ -1,51 +1,41 @@
 # Defense Cheatsheet
 
-## 使用前提
-
-- 材料来源：
-- 答辩场景：
-- 提问强度：
-
-## 项目一句话介绍
+## 1. One-sentence Project Pitch
 
 
 
-## 我的三点贡献
+## 2. Three Core Contributions
 
 1. 
 2. 
 3. 
 
-## 三个核心亮点
+## 3. Three Things Not to Overclaim
 
 1. 
 2. 
 3. 
 
-## 三个主要局限
+## 4. High-risk Questions
 
-1. 
-2. 
-3. 
+| Question | Key Point | Safe Answer |
+| --- | --- | --- |
+|  |  |  |
 
-## 五个高频追问
+## 5. Evidence Labels to Remember
 
-| Question | 10-second answer |
-| --- | --- |
-|  |  |
+- Material-supported:
+- Material-implied:
+- Material-missing:
+- Risk-inferred:
 
-## 五个安全回答句式
+## 6. Final 30-second Summary
 
-1. 当前版本主要实现的是...
-2. 数据主要基于...，用于...
-3. 这部分我主要负责...
-4. 严格来说，它目前还不是...，更接近...
-5. 后续最优先补的是...
 
-## 答辩前必须补的材料
 
-- [ ] 运行方式
-- [ ] 数据来源说明
-- [ ] 项目边界声明
-- [ ] 个人贡献拆分
-- [ ] 截图、Demo 或结果图
+## 7. Final Safety Check
+
+- [ ] I did not claim unprovided data as real.
+- [ ] I did not turn a demo into a deployed system.
+- [ ] I did not claim team work as individual work.
+- [ ] I did not overstate model originality or engineering maturity.
