@@ -1,6 +1,15 @@
 # Project Rubrics
 
-Use this reference for risk ranking, answer scoring, safe wording, data-source defense, innovation reframing, and contribution statements.
+Use this reference for risk ranking, evidence labeling, answer scoring, safe wording, data-source defense, innovation reframing, and contribution statements.
+
+## Evidence labels
+
+| Label | Meaning | How to use |
+| --- | --- | --- |
+| Material-supported | The material explicitly supports the claim. | Cite the README section, PPT page, report paragraph, code directory, data table, screenshot, or result figure. |
+| Material-implied | The material suggests the claim but does not state it clearly. | Treat it as uncertain and ask for clarification or repair. |
+| Material-missing | The material does not provide evidence. | Do not present the claim as true; propose a material repair. |
+| Risk-inferred | The risk is inferred from defense experience. | Mark it as a likely defense risk, not a fact from the material. |
 
 ## Risk rubric
 
@@ -12,9 +21,9 @@ Use this reference for risk ranking, answer scoring, safe wording, data-source d
 
 ## Weakness dimensions
 
-Check these dimensions in every weakness report:
+Check these dimensions in every review:
 
-1. 项目定位: 是否说清楚项目到底是什么，是否存在"仿真""优化""实时"等说法过大。
+1. 项目定位: 是否说清楚项目到底是什么，是否存在“仿真”“优化”“实时”“部署”等说法过大。
 2. 技术深度: 是否有算法、模型、计算逻辑、工程依据，还是主要是展示和集成。
 3. 数据支撑: 数据来源、构造逻辑、可信边界、可替换真实数据的路径。
 4. 结果展示: 是否有图表、截图、指标、对比、误差、失败案例。
@@ -36,21 +45,21 @@ Use this structure for most answers:
 
 Avoid:
 
-- "完全实现了..."
-- "真实部署了..."
-- "效果大幅领先..."
-- "最优控制..."
-- "高精度预测..."
-- "全部由我完成..."
+- “完全实现了...”
+- “真实部署了...”
+- “效果大幅领先...”
+- “最优控制...”
+- “高精度预测...”
+- “全部由我完成...”
 
 Prefer:
 
-- "当前版本主要实现..."
-- "面向课程设计场景..."
-- "基于典型工况或课程假设..."
-- "用于趋势展示和方案说明..."
-- "后续可以接入..."
-- "我主要负责..."
+- “当前版本主要实现...”
+- “面向课程设计场景...”
+- “基于典型工况或课程假设...”
+- “用于趋势展示和方案说明...”
+- “后续可以接入...”
+- “我主要负责...”
 
 ## Data-source defense logic
 
@@ -62,8 +71,6 @@ Prefer:
 
 ## Innovation rubric
 
-Classify claimed innovation into one or more levels:
-
 | Type | Safe framing |
 | --- | --- |
 | 方法创新 | Only claim when there is a new algorithm, model, training design, optimization method, or clear method adaptation. |
@@ -73,7 +80,7 @@ Classify claimed innovation into one or more levels:
 | 流程创新 | The workflow itself improves preparation, validation, review, or collaboration. |
 | 工具创新 | A reusable script, app, template, or skill is produced and can be used beyond one report. |
 
-If novelty is weak, shift from "创新性很强" to "完整性、可解释性、展示效果、可扩展性较好".
+If novelty is weak, shift from “创新性很强” to “完整性、可解释性、展示效果、可扩展性较好”.
 
 ## Answer scoring rubric
 
@@ -107,4 +114,4 @@ Produce five forms when requested:
 - 可在答辩中说的表达。
 - 面对追问时的防守回答。
 
-Always keep contribution conservative. If the user says "参与完成", ask or infer carefully before saying "独立负责".
+Always keep contribution conservative. If the user says “参与完成”, ask or infer carefully before saying “独立负责”.
