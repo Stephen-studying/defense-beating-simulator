@@ -1,11 +1,11 @@
 [project]
 name = "defense-beating-simulator"
-version = "0.1.0"
-description = "答辩挨打模拟器：从项目材料生成答辩追问、薄弱点诊断和速查卡的 Codex Skill。"
+version = "0.2.0"
+description = "答辩挨打模拟器：面向项目答辩材料的 evidence-gap audit、high-pressure follow-up questions、safe answer strategies and material repair actions 的 portable Agent Skill。"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
-keywords = ["codex", "skill", "defense", "interview", "student-project"]
+keywords = ["agent-skill", "codex", "defense", "interview", "red-team", "student-project"]
 
 [project.scripts]
 defense-skill-validate = "scripts.validate_skill:main"
