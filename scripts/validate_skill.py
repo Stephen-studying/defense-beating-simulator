@@ -1,24 +1,58 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import re
-import sys
 from pathlib import Path
 
 
 SKILL_NAME = "defense-beating-simulator"
-MAX_DESCRIPTION_LENGTH = 1024
+MAX_DESCRIPTION_LENGTH = 700
 REQUIRED_FILES = [
     "SKILL.md",
     "AGENTS.md",
+    "README.md",
+    "README.zh-CN.md",
     "agents/openai.yaml",
     "references/question-patterns.md",
     "references/project-rubrics.md",
+    "references/domain-ai-projects.md",
+    "references/domain-web-showcase.md",
+    "references/domain-engineering-simulation.md",
+    "references/domain-course-design.md",
+    "references/domain-research-prototype.md",
     "assets/project-summary.template.md",
     "assets/question-bank.template.md",
     "assets/weakness-report.template.md",
     "assets/defense-cheatsheet.template.md",
+    "examples/campus-energy-system/input-project-summary.md",
+    "examples/campus-energy-system/expected-output-chat.md",
+    "examples/yolo-pv-defect-detection/input-project-summary.md",
+    "examples/yolo-pv-defect-detection/expected-output-chat.md",
+    "evals/prompts.csv",
+    "evals/expected_checks.yaml",
+    "evals/README.md",
 ]
+REQUIRED_SKILL_TOKENS = [
+    "## When to use",
+    "## Do not use",
+    "## Claim-Evidence Matrix",
+    "## Evidence labeling rules",
+    "Material-supported",
+    "Material-implied",
+    "Material-missing",
+    "Risk-inferred",
+    "项目一句话定位",
+    "高风险缺口 Top 5",
+    "防守型回答策略",
+    "材料修复清单",
+]
+REQUIRED_TEMPLATE_TOKENS = {
+    "assets/project-summary.template.md": ["Claim-Evidence Summary", "Evidence label"],
+    "assets/question-bank.template.md": ["High-risk Question Chains", "Required material repair"],
+    "assets/weakness-report.template.md": ["Overall Risk Level", "Safe Answer Bank"],
+    "assets/defense-cheatsheet.template.md": ["Three Things Not to Overclaim", "Final 30-second Summary"],
+}
 
 
 def read_text(path: Path) -> str:
@@ -61,50 +95,87 @@ def collect_files(root: Path) -> list[Path]:
     return files
 
 
-def validate(root: Path) -> list[str]:
-    errors: list[str] = []
-
-    for rel in REQUIRED_FILES:
-        if not (root / rel).is_file():
-            errors.append(f"Missing required file: {rel}")
-
+def validate_skill_md(root: Path, errors: list[str]) -> None:
     skill_path = root / "SKILL.md"
-    if skill_path.is_file():
-        try:
-            skill_md = read_text(skill_path)
-            frontmatter = parse_frontmatter(skill_md)
-        except Exception as exc:  # noqa: BLE001 - report validation error text
-            errors.append(str(exc))
-            frontmatter = {}
-            skill_md = ""
+    if not skill_path.is_file():
+        return
+    try:
+        skill_md = read_text(skill_path)
+        frontmatter = parse_frontmatter(skill_md)
+    except Exception as exc:  # noqa: BLE001 - report validation error text
+        errors.append(str(exc))
+        return
 
-        name = frontmatter.get("name", "")
-        description = frontmatter.get("description", "")
-        if name != SKILL_NAME:
-            errors.append(f"SKILL.md name must be {SKILL_NAME!r}, got {name!r}")
-        if not re.fullmatch(r"[a-z0-9-]{1,64}", name):
-            errors.append("SKILL.md name must be lowercase hyphen-case and under 64 chars")
-        if not description:
-            errors.append("SKILL.md description is required")
-        if len(description) > MAX_DESCRIPTION_LENGTH:
-            errors.append("SKILL.md description is too long")
-        if "<" in description or ">" in description:
-            errors.append("SKILL.md description must not contain angle brackets")
-        if len(skill_md.splitlines()) > 500:
-            errors.append("SKILL.md should stay under 500 lines")
+    name = frontmatter.get("name", "")
+    description = frontmatter.get("description", "")
+    if name != SKILL_NAME:
+        errors.append(f"SKILL.md name must be {SKILL_NAME!r}, got {name!r}")
+    if not re.fullmatch(r"[a-z0-9-]{1,64}", name):
+        errors.append("SKILL.md name must be lowercase hyphen-case and under 64 chars")
+    if not description:
+        errors.append("SKILL.md description is required")
+    if len(description) > MAX_DESCRIPTION_LENGTH:
+        errors.append("SKILL.md description is too long")
+    if "<" in description or ">" in description:
+        errors.append("SKILL.md description must not contain angle brackets")
+    if "generic questions" in description.lower():
+        errors.append("SKILL.md description should not frame the skill as generic question generation")
+    if len(skill_md.splitlines()) > 500:
+        errors.append("SKILL.md should stay under 500 lines")
 
+    for token in REQUIRED_SKILL_TOKENS:
+        if token not in skill_md:
+            errors.append(f"SKILL.md missing required token: {token}")
+
+
+def validate_openai_yaml(root: Path, errors: list[str]) -> None:
     openai_path = root / "agents" / "openai.yaml"
-    if openai_path.is_file():
-        openai_yaml = read_text(openai_path)
-        for token in [
-            'display_name: "答辩挨打模拟器"',
-            "short_description:",
-            "default_prompt:",
-            "$defense-beating-simulator",
-        ]:
-            if token not in openai_yaml:
-                errors.append(f"agents/openai.yaml missing token: {token}")
+    if not openai_path.is_file():
+        return
+    openai_yaml = read_text(openai_path)
+    for token in [
+        'display_name: "答辩挨打模拟器"',
+        "short_description:",
+        "default_prompt:",
+        "$defense-beating-simulator",
+        "Claim-Evidence Matrix",
+    ]:
+        if token not in openai_yaml:
+            errors.append(f"agents/openai.yaml missing token: {token}")
 
+
+def validate_templates(root: Path, errors: list[str]) -> None:
+    for rel, tokens in REQUIRED_TEMPLATE_TOKENS.items():
+        path = root / rel
+        if not path.is_file():
+            continue
+        text = read_text(path)
+        for token in tokens:
+            if token not in text:
+                errors.append(f"{rel} missing token: {token}")
+
+
+def validate_evals(root: Path, errors: list[str]) -> None:
+    prompts_path = root / "evals" / "prompts.csv"
+    if not prompts_path.is_file():
+        return
+    try:
+        with prompts_path.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+    except Exception as exc:  # noqa: BLE001 - surface CSV parse errors
+        errors.append(f"evals/prompts.csv is not valid CSV: {exc}")
+        return
+
+    if len(rows) < 10:
+        errors.append("evals/prompts.csv should contain at least 10 prompts")
+    if not any(row.get("should_trigger") == "false" for row in rows):
+        errors.append("evals/prompts.csv should include negative prompts")
+    if not any("Claim-Evidence Matrix" in row.get("expected_sections", "") for row in rows):
+        errors.append("evals/prompts.csv should check Claim-Evidence Matrix output")
+
+
+def validate_text_files(root: Path, errors: list[str]) -> None:
+    unfinished_markers = [r"\bTO" + "DO\b", "place" + "holder", "Replace " + "with"]
     for path in collect_files(root):
         try:
             text = read_text(path)
@@ -114,10 +185,22 @@ def validate(root: Path) -> list[str]:
         rel = path.relative_to(root).as_posix()
         if "\ufffd" in text:
             errors.append(f"File contains replacement characters: {rel}")
-        unfinished_markers = [r"\bTO" + "DO\\b", "place" + "holder", "Replace " + "with"]
         if re.search("|".join(unfinished_markers), text, re.IGNORECASE):
             errors.append(f"File contains unfinished template-marker text: {rel}")
 
+
+def validate(root: Path) -> list[str]:
+    errors: list[str] = []
+
+    for rel in REQUIRED_FILES:
+        if not (root / rel).is_file():
+            errors.append(f"Missing required file: {rel}")
+
+    validate_skill_md(root, errors)
+    validate_openai_yaml(root, errors)
+    validate_templates(root, errors)
+    validate_evals(root, errors)
+    validate_text_files(root, errors)
     return errors
 
 
