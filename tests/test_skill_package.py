@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import subprocess
 import sys
 import unittest
@@ -21,25 +22,64 @@ class SkillPackageTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("Validation passed", result.stdout)
 
-    def test_skill_entrypoint_mentions_material_focus(self) -> None:
+    def test_skill_entrypoint_has_red_team_contract(self) -> None:
         skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("答辩材料审查者", skill)
-        self.assertIn("README, report, PPT, code structure, data notes, figures", skill)
+        for token in [
+            "## When to use",
+            "## Do not use",
+            "## Claim-Evidence Matrix",
+            "## Evidence labeling rules",
+            "Material-supported",
+            "Material-implied",
+            "Material-missing",
+            "Risk-inferred",
+            "项目一句话定位",
+            "高风险缺口 Top 5",
+        ]:
+            self.assertIn(token, skill)
         self.assertNotIn("非专业观众", skill)
 
-    def test_question_patterns_deprioritize_public_science(self) -> None:
-        patterns = (ROOT / "references" / "question-patterns.md").read_text(encoding="utf-8")
-        self.assertIn("should not turn into public-science communication coaching", patterns)
-        self.assertIn("Prioritize questions grounded in the user's README", patterns)
-
-    def test_templates_exist(self) -> None:
+    def test_domain_references_exist(self) -> None:
         for name in [
-            "project-summary.template.md",
-            "question-bank.template.md",
-            "weakness-report.template.md",
-            "defense-cheatsheet.template.md",
+            "domain-ai-projects.md",
+            "domain-web-showcase.md",
+            "domain-engineering-simulation.md",
+            "domain-course-design.md",
+            "domain-research-prototype.md",
         ]:
-            self.assertTrue((ROOT / "assets" / name).is_file(), name)
+            self.assertTrue((ROOT / "references" / name).is_file(), name)
+
+    def test_templates_include_delivery_structure(self) -> None:
+        checks = {
+            "project-summary.template.md": "Claim-Evidence Summary",
+            "question-bank.template.md": "High-risk Question Chains",
+            "weakness-report.template.md": "Safe Answer Bank",
+            "defense-cheatsheet.template.md": "Three Things Not to Overclaim",
+        }
+        for name, token in checks.items():
+            text = (ROOT / "assets" / name).read_text(encoding="utf-8")
+            self.assertIn(token, text, name)
+
+    def test_examples_and_evals_exist(self) -> None:
+        required = [
+            "examples/campus-energy-system/input-project-summary.md",
+            "examples/campus-energy-system/expected-output-chat.md",
+            "examples/yolo-pv-defect-detection/input-project-summary.md",
+            "examples/yolo-pv-defect-detection/expected-output-chat.md",
+            "evals/prompts.csv",
+            "evals/expected_checks.yaml",
+            "evals/README.md",
+        ]
+        for rel in required:
+            self.assertTrue((ROOT / rel).is_file(), rel)
+
+    def test_evals_include_positive_and_negative_prompts(self) -> None:
+        with (ROOT / "evals" / "prompts.csv").open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        self.assertGreaterEqual(len(rows), 10)
+        self.assertTrue(any(row["should_trigger"] == "true" for row in rows))
+        self.assertTrue(any(row["should_trigger"] == "false" for row in rows))
+        self.assertTrue(any("Claim-Evidence Matrix" in row["expected_sections"] for row in rows))
 
 
 if __name__ == "__main__":
