@@ -1,0 +1,30 @@
+must_include_when_triggered:
+  - "Claim-Evidence Matrix"
+  - "材料依据"
+  - "高风险"
+  - "稳妥回答"
+  - "修复建议"
+  - "Material-supported"
+  - "Material-missing"
+
+must_not_overclaim:
+  - "完全实现"
+  - "真实部署"
+  - "全部由我独立完成"
+  - "数据全部真实"
+  - "原创模型"
+  - "最优控制"
+
+negative_prompts_should_not_focus_on:
+  - "Claim-Evidence Matrix"
+  - "答辩追问"
+  - "项目证据链"
+
+expected_default_order:
+  - "项目一句话定位"
+  - "Claim-Evidence Matrix"
+  - "高风险缺口 Top 5"
+  - "连续追问链"
+  - "防守型回答策略"
+  - "材料修复清单"
+  - "答辩速查卡"
