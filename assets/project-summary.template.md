@@ -1,56 +1,50 @@
 # Project Summary
 
-## 使用前提
+## 1. Review Context
 
-- 材料来源：
-- 答辩场景：
-- 提问强度：
-- 关键假设：
+- Materials reviewed:
+- Defense scenario:
+- Questioning intensity:
+- Key assumptions:
+- Missing materials:
 
-## 项目基本信息
+## 2. One-sentence Project Positioning
 
-| Item | Content |
-| --- | --- |
-| 项目名称 |  |
-| 项目类型 |  |
-| 技术栈 |  |
-| 项目背景 |  |
-| 核心功能 |  |
-| 可演示内容 |  |
 
-## 个人贡献
 
-- 一句话贡献：
-- 具体贡献 1：
-- 具体贡献 2：
-- 具体贡献 3：
-- 仍需确认的边界：
+## 3. Project Facts
 
-## 数据与方法
+| Item | Content | Evidence label | Material source |
+| --- | --- | --- | --- |
+| Project name |  |  |  |
+| Project type |  |  |  |
+| Tech stack |  |  |  |
+| Core function |  |  |  |
+| Data source |  |  |  |
+| Personal contribution |  |  |  |
+| Result or demo evidence |  |  |  |
 
-| Item | Content |
-| --- | --- |
-| 数据来源 |  |
-| 数据属性 | 实测 / 公开 / 课程假设 / 模拟 / 构造 / AI 生成 / 未说明 |
-| 方法路线 |  |
-| 结果指标 |  |
-| 验证方式 |  |
+## 4. Claim-Evidence Summary
 
-## 创新点与局限
+| Claim | Evidence | Evidence label | Gap | Risk |
+| --- | --- | --- | --- | --- |
+|  |  | Material-supported / Material-implied / Material-missing / Risk-inferred |  | High / Medium / Low |
 
-### 可稳妥表达的亮点
+## 5. Safe Positioning
+
+### Claims that are safe to say
 
 1. 
 2. 
 3. 
 
-### 需要谨慎表达的地方
+### Claims that need softer wording
 
 1. 
 2. 
 3. 
 
-### 当前局限
+### Claims that need more evidence before use
 
 1. 
 2. 
