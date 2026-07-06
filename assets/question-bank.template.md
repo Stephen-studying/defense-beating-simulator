@@ -1,46 +1,64 @@
-# Question Bank
+# Defense Question Bank
 
-## 使用前提
+## 1. Review Context
 
-- 材料来源：
-- 答辩场景：
-- 提问强度：
-- 重点拷问方向：
+- Materials reviewed:
+- Defense scenario:
+- Questioning intensity:
+- Main red-team focus:
 
-## 高频问题总览
+## 2. High-risk Question Chains
 
-| ID | Role | Category | Risk | Question | Likely Follow-up | Answer Strategy |
-| --- | --- | --- | --- | --- | --- | --- |
-| Q1 |  |  | High |  |  |  |
+### Chain 1: Data Source
 
-## 高压追问链
+- Q1:
+- Q2:
+- Q3:
+- Evidence gap:
+- Risk:
+- Safe answer:
+- Required material repair:
 
-### Chain 1: 数据真实性
+### Chain 2: Personal Contribution
 
-1. Q:
-   - Follow-up:
-   - Safe answer direction:
+- Q1:
+- Q2:
+- Q3:
+- Evidence gap:
+- Risk:
+- Safe answer:
+- Required material repair:
 
-### Chain 2: 个人贡献
+### Chain 3: Project Boundary
 
-1. Q:
-   - Follow-up:
-   - Safe answer direction:
+- Q1:
+- Q2:
+- Q3:
+- Evidence gap:
+- Risk:
+- Safe answer:
+- Required material repair:
 
-### Chain 3: 项目边界
+### Chain 4: Method or Model Depth
 
-1. Q:
-   - Follow-up:
-   - Safe answer direction:
+- Q1:
+- Q2:
+- Q3:
+- Evidence gap:
+- Risk:
+- Safe answer:
+- Required material repair:
 
-## 参考回答
+## 3. Question Table
 
-### Q1
+| ID | Role | Category | Risk | Question | Evidence basis | Likely follow-up | Safe answer strategy |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Q1 |  |  | High |  |  |  |  |
 
-**问题：**
+## 4. Answer Strategy Notes
 
-**稳妥回答：**
-
-**为什么这样答：**
-
-**还需要补的材料：**
+- Answer what is asked first.
+- State what the current material supports.
+- Acknowledge what is not done yet.
+- Explain why the current boundary is acceptable.
+- Name a concrete repair or next step.
