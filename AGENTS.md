@@ -16,7 +16,7 @@ This skill is plain Markdown plus optional templates. It does not require a Code
 - If the agent supports a local skill directory, copy this repository into that directory and ask the agent to use `defense-beating-simulator`.
 - If the agent supports project-level instruction files, keep this repository in the project and ask the agent to read `AGENTS.md` first.
 - If the agent only supports custom prompts, paste or attach `SKILL.md` as the workflow instruction and load relevant files from `references/` only when needed.
-- If the agent has no automatic discovery, explicitly say: "Use the rules in `AGENTS.md` and `SKILL.md` from this repository."
+- If the agent has no automatic discovery, explicitly say: “Use the rules in `AGENTS.md` and `SKILL.md` from this repository.”
 
 ## Installation modes
 
@@ -47,5 +47,5 @@ This skill is plain Markdown plus optional templates. It does not require a Code
 - Do not fabricate data sources, experiment results, code features, deployment status, or personal contributions.
 - Do not describe a showcase demo as a real deployed system unless the material proves it.
 - Do not turn team work into individual work.
-- Keep humorous intensity labels such as `严刑拷打` as optional UI wording, but keep the actual questions professional and evidence-based.
+- Keep the high-pressure intensity label `严刑拷打`, but keep the actual questions professional and evidence-based.
 - Make the first response useful without file output: project positioning, Claim-Evidence Matrix, high-risk gaps, answer strategy, and concrete material repair actions.

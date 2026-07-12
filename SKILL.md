@@ -3,7 +3,7 @@ name: defense-beating-simulator
 description: Review project defense materials for evidence gaps, high-risk questions, follow-up chains, safe answer strategies, and concrete repair actions. Use when the user asks to prepare for a course defense, graduate interview, competition defense, resume project interview, or GitHub project review.
 ---
 
-# 答辩挨打模拟器
+# 项目答辩红队审查器
 
 ## Core position
 
@@ -20,7 +20,7 @@ Default output is structured chat feedback. Do not create Markdown files by defa
 Use this skill when the user asks for:
 
 - 项目答辩追问
-- 保研/面试项目拷问
+- 保研、复试、面试中的项目拷问
 - README、PPT、报告、代码结构的答辩风险检查
 - 数据来源、个人贡献、创新点、项目边界的防守表达
 - 答辩速查卡、问题库、薄弱点修复清单
@@ -34,140 +34,142 @@ Do not use this skill for:
 - 生成通用面试题
 - 没有项目材料的职业规划建议
 - 与项目证据链无关的学术科普问答
-- 替用户编造数据、结果、部署、代码功能或个人贡献
+- 替用户编造数据、结果、部署状态、代码功能或个人贡献
 
-## Safety rules
+## Required workflow
 
-- Do not invent data sources.
-- Do not invent experimental results.
-- Do not invent code features.
-- Do not describe a showcase demo as a real deployed system unless the material proves it.
-- Do not turn team work into individual work.
-- Do not describe course-assumption data as measured data.
-- Do not package minor model tuning as an original model.
-- Do not package a literature review as an experimental paper.
-- Help the user state boundaries safely; do not help the user lie.
+Always inspect evidence before producing hard questions. The default output order is:
+
+1. **One-sentence positioning** / 项目一句话定位
+2. **Claim-Evidence Matrix**
+3. **Top 5 high-risk gaps** / 高风险缺口 Top 5
+4. **Follow-up question chains** / 连续追问链
+5. **Safe answer strategies** / 防守型回答策略
+6. **Material repair checklist** / 材料修复清单
+7. **Defense cheatsheet** / 答辩速查卡
+
+Do not start with a long flat list of questions. First show what the material claims, what evidence supports it, what is missing, and why it is risky.
+
+## Claim-Evidence Matrix
+
+Produce this matrix before high-pressure questions:
+
+| Claim / 项目说法 | Evidence / 材料依据 | Gap / 缺口 | Risk |
+| --- | --- | --- | --- |
+| 项目实现了某功能 | README 第几节、代码目录、PPT 页面、报告图表或用户提供的材料片段 | 缺少截图、数据来源、运行说明、对比实验或贡献边界 | High / Medium / Low |
+
+Rules:
+
+- Every core project claim must map to explicit material evidence when possible.
+- If the material does not provide evidence, mark it as `Material-missing`.
+- If the material only indirectly suggests the claim, mark it as `Material-implied`.
+- If the issue is inferred from defense experience, mark it as `Risk-inferred`.
+- Do not present `Material-implied` or `Risk-inferred` content as fact.
+- Do not turn absent material into invented evidence.
 
 ## Evidence labeling rules
 
 Every important claim must be labeled as one of:
 
-- `Material-supported`: the material explicitly supports the claim.
-- `Material-implied`: the material indirectly suggests the claim but does not state it clearly.
-- `Material-missing`: the material does not provide evidence for the claim.
-- `Risk-inferred`: the risk is inferred from defense experience, not directly stated in the material.
+- `Material-supported`: 材料明确支持。
+- `Material-implied`: 材料间接暗示，但没有明说。
+- `Material-missing`: 材料没有提供。
+- `Risk-inferred`: 根据答辩经验推断出的风险。
 
-Do not present `Material-implied` or `Risk-inferred` as facts. If evidence is absent, say `Material-missing` and propose a repair action.
+Do not present `Material-implied` or `Risk-inferred` as facts.
 
-## Required workflow
+## Question intensity
 
-1. **Read materials**
-   - Accept README, report text, PPT text, project summary, code tree, experiment table, data notes, demo script, resume bullet, screenshots, or pasted notes.
-   - If the user gives a repository path, inspect README, docs, source tree, config files, example data, demo assets, screenshots, and tests.
-   - If materials are insufficient, state what can and cannot be judged before asking for missing items.
+Support three user-selectable intensity levels:
 
-2. **One-sentence positioning**
-   - State the safest project positioning in one sentence.
-   - Flag words that may overclaim, such as "真实仿真", "实时部署", "最优控制", "原创模型", "全部独立完成".
+| Level | Use when | Behavior |
+| --- | --- | --- |
+| 基础审查 | 用户刚开始准备材料 | 先检查项目定位、材料完整度和高频问题 |
+| 深度追问 | 用户需要正式答辩训练 | 连续追问数据、方法、贡献、创新和边界 |
+| 严刑拷打 | 用户明确要求高压红队 | 用尖锐但专业的方式暴露最危险漏洞，不做人身攻击 |
 
-3. **Claim-Evidence Matrix**
-   - Output this matrix before high-pressure questions.
-   - Every core project claim must map to material evidence or a missing-evidence label.
+Even in `严刑拷打` mode, keep wording evidence-based and professional.
+
+## Reference routing
+
+Load only the reference files needed for the project type:
+
+- AI, machine learning, YOLO, detection, classification, prediction: `references/domain-ai-projects.md`
+- Web showcase, dashboard, frontend demo, visualization platform: `references/domain-web-showcase.md`
+- Energy systems, engineering simulation, source-grid-load-storage, MATLAB or EMS projects: `references/domain-engineering-simulation.md`
+- Course design, undergraduate comprehensive practice, class assignments: `references/domain-course-design.md`
+- Research prototype, paper project, innovation project: `references/domain-research-prototype.md`
+- General patterns and rubrics: `references/question-patterns.md` and `references/project-rubrics.md`
+
+Do not load every reference file by default. Select based on the user's material.
+
+## Safe answer strategy
+
+Reference answers must follow this pattern:
+
+1. Directly answer the question.
+2. State what the current project has actually done.
+3. State what it has not done.
+4. Explain why that scope is reasonable for the current scenario.
+5. Give a concrete next repair or improvement.
+
+Recommended answer style:
+
+- 承认边界。
+- 说明依据。
+- 强调真实贡献。
+- 给出后续改进。
+- 不夸大项目、不编造数据、不虚构个人贡献。
+
+## Material repair checklist
+
+When gaps are found, provide concrete repair actions such as:
+
+- README: add project boundary, data source, run command, screenshots, reproducibility notes.
+- PPT: add evidence slides for data source, workflow, contribution, limitations, and failure cases.
+- Report: add assumptions, parameters, formulas, baseline comparison, experiment split, or result explanation.
+- Resume: rewrite contribution to separate personal work from team work.
+- Demo script: replace overclaiming phrases with safer boundary-aware wording.
+
+## Safety rules
+
+Never help the user lie. In particular:
+
+- Do not invent data sources.
+- Do not invent experiment results.
+- Do not invent code features.
+- Do not invent deployment status.
+- Do not turn a showcase demo into a real deployed system.
+- Do not turn team work into individual work.
+- Do not call course-assumption data measured data.
+- Do not package model fine-tuning as an original model unless the material proves it.
+- Do not package literature review as experimental research.
+
+Use safe wording instead:
+
+- “当前版本主要实现……”
+- “材料中尚未看到……”
+- “更稳妥的说法是……”
+- “这部分可以作为后续改进，而不是当前结论。”
+
+## Default response shape
+
+For normal chat output, use this structure:
 
 ```md
+## 项目一句话定位
+
 ## Claim-Evidence Matrix
 
-| Claim / 项目说法 | Evidence / 材料依据 | Evidence label | Gap / 缺口 | Risk |
-| --- | --- | --- | --- | --- |
-| 项目实现了某功能 | README section / code directory / PPT page | Material-supported | 缺少截图、数据、运行说明或结果解释 | High / Medium / Low |
+## 高风险缺口 Top 5
+
+## 连续追问链
+
+## 防守型回答策略
+
+## 材料修复清单
+
+## 答辩速查卡
 ```
 
-4. **Top 5 high-risk gaps**
-   - Rank the five most dangerous gaps. Typical high-risk gaps involve data authenticity, personal contribution, project boundary, method depth, result validation, innovation, and reproducibility.
-
-5. **Follow-up chains**
-   - For each High risk gap, generate 2-4 chained questions.
-   - Ask about evidence and mechanism, not labels only.
-
-6. **Safe answer strategies**
-   - Use this frame: 正面回应 -> 当前做到什么 -> 没做到什么 -> 为什么这样处理 -> 后续怎么改.
-   - Do not make the answer sound stronger than the material supports.
-
-7. **Material repair checklist**
-   - Give concrete edits for README, PPT, report, demo script, result table, code comments, or resume wording.
-   - Prefer exact section names and safe wording.
-
-8. **Defense cheatsheet**
-   - Include one-sentence pitch, three contributions, three highlights, three limitations, five high-risk questions, and five safe phrases.
-
-## Default output order
-
-Use this order unless the user explicitly asks for a narrower output:
-
-1. 项目一句话定位
-2. Claim-Evidence Matrix
-3. 高风险缺口 Top 5
-4. 连续追问链
-5. 防守型回答策略
-6. 材料修复清单
-7. 答辩速查卡
-
-## Scene modes
-
-- `course-defense`: task requirements, calculation basis, data assumptions, report completeness, individual workload.
-- `graduate-interview`: personal contribution, technical understanding, research potential, honest boundary, next-step research.
-- `resume-project`: concise contribution wording, measurable result, interview-safe detail, no ownership inflation.
-- `competition-defense`: novelty, application value, demo clarity, landing path, team division.
-- `technical-interview`: architecture, implementation, dependencies, edge cases, testing, maintainability, reproducibility.
-- `github-showcase`: README, install command, example data, screenshots, license, project structure, limitations.
-
-## Intensity labels
-
-Use exactly these labels:
-
-| 强度 | 含义 | 输出方式 |
-| --- | --- | --- |
-| 先热个身 | 友好热身 | 先检查项目能不能讲清楚，问题较基础。 |
-| 开始挑刺 | 标准答辩压力 | 系统追问数据、方法、结果、贡献、创新和证据缺口。 |
-| 严刑拷打 | 高压红队 | 集中攻击最容易扣分的薄弱点，增加连续追问和材料修复建议。 |
-
-"严刑拷打" is a humorous label. The actual questions must remain professional, restrained, and evidence-based.
-
-## Role lenses
-
-Choose relevant roles based on the material; do not force every role every time.
-
-| 角色 | 主要追问点 |
-| --- | --- |
-| 课程老师 | 是否符合任务要求，计算和报告是否规范。 |
-| 保研面试老师 | 用户到底做了什么，是否真正理解项目，是否有继续研究潜力。 |
-| 竞赛评委 | 创新性、应用价值、展示效果、落地可行性。 |
-| 技术面试官 | 架构设计、代码实现、依赖、边界情况、测试和可扩展性。 |
-| 严苛审稿人 | 数据可靠性、证据链、对比实验、结果解释和过度包装。 |
-| 答辩材料审查者 | README、报告、PPT、代码结构、数据说明、图表和结论是否互相支撑。 |
-
-## Project-type references
-
-Load these files only when relevant:
-
-- `references/domain-ai-projects.md` for AI, machine learning, YOLO, detection, classification, prediction, and algorithm projects.
-- `references/domain-web-showcase.md` for web demos, dashboards, frontend visualizations, and showcase systems.
-- `references/domain-engineering-simulation.md` for energy systems, engineering simulation, EMS, PV, storage, and source-grid-load-storage projects.
-- `references/domain-course-design.md` for course design, undergraduate practice, and team coursework.
-- `references/domain-research-prototype.md` for research prototypes, paper projects, innovation projects, and early-stage experiments.
-
-Also use:
-
-- `references/question-patterns.md` for universal chains and role phrasing.
-- `references/project-rubrics.md` for risk ranking, safe wording, answer scoring, contribution framing, and innovation reframing.
-
-## Optional exported package
-
-Only when the user asks to export files, write:
-
-- `project-summary.md`
-- `question-bank.md`
-- `weakness-report.md`
-- `defense-cheatsheet.md`
-
-When the user asks for a full package, add specialized files for high-pressure questions, reference answers, contribution statement, data-source defense, innovation reframing, boundary statement, and reproducibility check.
+When the user provides very little material, say what is missing and produce a preliminary risk review instead of pretending to know the project details.

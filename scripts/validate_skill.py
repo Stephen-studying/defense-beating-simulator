@@ -56,6 +56,12 @@ REQUIRED_TEMPLATE_TOKENS = {
     "assets/weakness-report.template.md": ["Overall Risk Level", "Safe Answer Bank"],
     "assets/defense-cheatsheet.template.md": ["Three Things Not to Overclaim", "Final 30-second Summary"],
 }
+MOJIBAKE_MARKERS = [
+    chr(0x6924) + chr(0x572d),
+    chr(0x7edb) + chr(0x65c7),
+    chr(0x6d93) + chr(0x30e5),
+    chr(0x7039) + chr(0x2103),
+]
 
 
 def read_text(path: Path) -> str:
@@ -206,6 +212,8 @@ def validate_text_files(root: Path, errors: list[str]) -> None:
         rel = path.relative_to(root).as_posix()
         if "\ufffd" in text:
             errors.append(f"File contains replacement characters: {rel}")
+        if any(marker in text for marker in MOJIBAKE_MARKERS):
+            errors.append(f"File appears to contain mojibake text: {rel}")
         if re.search("|".join(unfinished_markers), text, re.IGNORECASE):
             errors.append(f"File contains unfinished template-marker text: {rel}")
 
