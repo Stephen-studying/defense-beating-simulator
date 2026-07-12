@@ -1,7 +1,7 @@
 [project]
 name = "defense-beating-simulator"
 version = "0.2.0"
-description = "答辩挨打模拟器：面向项目答辩材料的 evidence-gap audit、high-pressure follow-up questions、safe answer strategies and material repair actions 的 portable Agent Skill。"
+description = "项目答辩红队审查器：面向项目答辩材料的 evidence-gap audit、high-pressure follow-up questions、safe answer strategies and material repair actions 的 portable Agent Skill。"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
@@ -12,4 +12,4 @@ defense-skill-validate = "scripts.validate_skill:main"
 
 [tool.defense-beating-simulator]
 skill_name = "defense-beating-simulator"
-display_name = "答辩挨打模拟器"
+display_name = "项目答辩红队审查器"
