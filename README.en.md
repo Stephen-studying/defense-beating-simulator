@@ -1,14 +1,14 @@
 <div align="center">
 
-# Defense Beating Simulator
+# Project Defense Red-Team Skill
 
-**A project defense red-team skill for evidence-gap review and high-pressure follow-up questions.**
+**A portable Agent Skill for evidence-gap review and high-pressure project-defense questions.**
 
 Review the evidence behind project claims before generating defense questions, safe answers, and material repair actions.
 
 ![license](https://img.shields.io/badge/license-MIT-111827)
 ![skill](https://img.shields.io/badge/type-Agent%20Skill-2563eb)
-![agent](https://img.shields.io/badge/install-Codex%20%7C%20Generic-16a34a)
+![agent](https://img.shields.io/badge/install-Codex%20%7C%20Generic%20%7C%20Project-16a34a)
 ![language](https://img.shields.io/badge/language-English%20%7C%20%E4%B8%AD%E6%96%87-0f766e)
 
 [Install](#install) ·
@@ -21,14 +21,13 @@ Review the evidence behind project claims before generating defense questions, s
 
 ---
 
+- Package name: `defense-beating-simulator`.
 - This repository is not a generic defense-question generator.
 - It is a portable Agent Skill for reviewing project defense materials through a claim-evidence-risk workflow.
-- It helps students and early-stage developers prepare for course defenses, graduate interviews, competition defenses, resume project interviews, and GitHub project reviews.
+- It works with Codex, project-level instruction agents, generic local agents, and custom-prompt agents that can read Markdown instructions.
 - By default, it returns structured feedback in chat. It only exports Markdown files when the user explicitly asks for files.
 
-## Positioning
-
-The core workflow is:
+## Workflow
 
 ```text
 Claims -> Evidence -> Gaps -> Risks -> Follow-up questions -> Safe answers -> Material repairs
@@ -46,6 +45,17 @@ The skill does not invent data sources, experimental results, deployment status,
 | Material Repair Actions | Suggest concrete fixes for README, slides, reports, demo scripts, and resume wording |
 | Defense Cheatsheet | Summarize pitch, contributions, highlights, limitations, and high-frequency questions |
 
+## Universal Agent Entrypoints
+
+| Agent type | Recommended entrypoint |
+| --- | --- |
+| Codex / OpenAI Skill | `SKILL.md` + `agents/openai.yaml` |
+| Generic local agent | `AGENTS.md` -> `SKILL.md` |
+| Claude-like agent | `CLAUDE.md` -> `AGENTS.md` -> `SKILL.md` |
+| Gemini-like agent | `GEMINI.md` -> `AGENTS.md` -> `SKILL.md` |
+| Custom prompt agent | Attach or paste `SKILL.md` |
+| Project-local agent | Place this repo under `.agents/skills/defense-beating-simulator` |
+
 ## Best For
 
 - Course design, capstone, and undergraduate practice projects
@@ -59,16 +69,6 @@ The skill does not invent data sources, experimental results, deployment status,
 - Generic interview practice without project materials
 - Career advice unrelated to project evidence
 - Replacing advisor feedback or real committee evaluation
-
-## Workflow
-
-1. One-sentence project positioning
-2. Claim-Evidence Matrix
-3. Top 5 high-risk gaps
-4. Follow-up question chains
-5. Safe answer strategies
-6. Material repair checklist
-7. Defense cheatsheet
 
 ## Example
 
@@ -89,7 +89,7 @@ Do not invent information that is not present in my materials.
 
 ## Install
 
-Codex:
+### Codex
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent codex -Force
@@ -99,7 +99,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent codex -
 sh install.sh --agent codex --force
 ```
 
-Generic local agents:
+### Generic local agents
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent generic -Force
@@ -109,12 +109,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent generic
 sh install.sh --agent generic --force
 ```
 
-Default locations:
+### Project-local agents
 
-```text
-Codex:   ~/.codex/skills/defense-beating-simulator
-Generic: ~/.agent-skills/defense-beating-simulator
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent project -Destination "D:\YourProject\.agents\skills" -Force
 ```
+
+```bash
+sh install.sh --agent project --dest "$HOME/your-project/.agents/skills" --force
+```
+
+Use a target project directory outside this repository. Do not install project mode into a child directory of this source repository.
 
 ## Repository Structure
 
@@ -122,6 +127,8 @@ Generic: ~/.agent-skills/defense-beating-simulator
 defense-beating-simulator/
 ├── SKILL.md
 ├── AGENTS.md
+├── CLAUDE.md
+├── GEMINI.md
 ├── agents/openai.yaml
 ├── references/
 ├── assets/
@@ -130,8 +137,7 @@ defense-beating-simulator/
 ├── scripts/
 ├── tests/
 ├── install.ps1
-├── install.sh
-└── README.md
+└── install.sh
 ```
 
 ## Validate
