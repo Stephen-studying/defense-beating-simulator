@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet("codex", "generic")]
+    [ValidateSet("codex", "generic", "project")]
     [string]$Agent = "codex",
     [string]$Destination,
     [switch]$Force
@@ -15,12 +15,14 @@ if ([string]::IsNullOrWhiteSpace($Destination)) {
             $codexHome = Join-Path $env:USERPROFILE ".codex"
         }
         $Destination = Join-Path $codexHome "skills"
-    } else {
+    } elseif ($Agent -eq "generic") {
         $agentHome = $env:AGENT_SKILLS_HOME
         if ([string]::IsNullOrWhiteSpace($agentHome)) {
             $agentHome = Join-Path $env:USERPROFILE ".agent-skills"
         }
         $Destination = $agentHome
+    } else {
+        throw "Project mode requires -Destination, for example: -Destination 'D:\YourProject\.agents\skills'"
     }
 }
 
@@ -34,6 +36,10 @@ if (-not (Test-Path -LiteralPath $manifest)) {
 
 New-Item -ItemType Directory -Path $Destination -Force | Out-Null
 $resolvedDestination = (Resolve-Path -LiteralPath $Destination).Path
+$resolvedSource = (Resolve-Path -LiteralPath $source).Path
+if ($resolvedDestination.StartsWith($resolvedSource)) {
+    throw "Destination must not be inside the source repository. Choose another project directory or a user-level skills directory."
+}
 $target = Join-Path $resolvedDestination $skillName
 
 if (Test-Path -LiteralPath $target) {
@@ -44,10 +50,18 @@ if (Test-Path -LiteralPath $target) {
     if (-not $resolvedTarget.StartsWith($resolvedDestination)) {
         throw "Refusing to remove target outside destination: $resolvedTarget"
     }
+    Get-ChildItem -LiteralPath $resolvedTarget -Recurse -Force -ErrorAction SilentlyContinue |
+        ForEach-Object { $_.Attributes = "Normal" }
     Remove-Item -LiteralPath $resolvedTarget -Recurse -Force
 }
 
-Copy-Item -LiteralPath $source -Destination $resolvedDestination -Recurse -Force
+New-Item -ItemType Directory -Path $target -Force | Out-Null
+$excludedNames = @(".git", ".venv", "__pycache__", ".pytest_cache", "tmp-agent-install", ".agent-skills", "agent-skills")
+Get-ChildItem -LiteralPath $source -Force |
+    Where-Object { $excludedNames -notcontains $_.Name } |
+    ForEach-Object {
+        Copy-Item -LiteralPath $_.FullName -Destination $target -Recurse -Force
+    }
 
 Write-Host "Installed $skillName for '$Agent' to:"
 Write-Host $target
@@ -58,4 +72,5 @@ if ($Agent -eq "codex") {
     Write-Host "Point your agent at one of these entrypoints:"
     Write-Host "  - $target\AGENTS.md"
     Write-Host "  - $target\SKILL.md"
+    Write-Host "  - $target\CLAUDE.md or $target\GEMINI.md when your agent prefers those filenames"
 }
