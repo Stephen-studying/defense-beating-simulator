@@ -62,6 +62,9 @@ class SkillPackageTests(unittest.TestCase):
 
     def test_examples_and_evals_exist(self) -> None:
         required = [
+            "CLAUDE.md",
+            "GEMINI.md",
+            "README.en.md",
             "examples/campus-energy-system/input-project-summary.md",
             "examples/campus-energy-system/expected-output-chat.md",
             "examples/yolo-pv-defect-detection/input-project-summary.md",
@@ -72,6 +75,22 @@ class SkillPackageTests(unittest.TestCase):
         ]
         for rel in required:
             self.assertTrue((ROOT / rel).is_file(), rel)
+
+    def test_universal_agent_entrypoints_are_documented(self) -> None:
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("Universal agent compatibility", agents)
+        self.assertIn("CLAUDE.md", agents)
+        self.assertIn("GEMINI.md", agents)
+        self.assertIn(".agents/skills", agents)
+
+        for rel in ["CLAUDE.md", "GEMINI.md"]:
+            text = (ROOT / rel).read_text(encoding="utf-8")
+            self.assertIn("AGENTS.md", text)
+            self.assertIn("SKILL.md", text)
+            self.assertIn("Claim-Evidence Matrix", text)
+
+        openai_yaml = (ROOT / "agents" / "openai.yaml").read_text(encoding="utf-8")
+        self.assertIn('display_name: "项目答辩红队审查器"', openai_yaml)
 
     def test_evals_include_positive_and_negative_prompts(self) -> None:
         with (ROOT / "evals" / "prompts.csv").open("r", encoding="utf-8", newline="") as handle:
