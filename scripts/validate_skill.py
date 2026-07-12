@@ -11,8 +11,11 @@ MAX_DESCRIPTION_LENGTH = 700
 REQUIRED_FILES = [
     "SKILL.md",
     "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
     "README.md",
     "README.zh-CN.md",
+    "README.en.md",
     "agents/openai.yaml",
     "references/question-patterns.md",
     "references/project-rubrics.md",
@@ -42,10 +45,10 @@ REQUIRED_SKILL_TOKENS = [
     "Material-implied",
     "Material-missing",
     "Risk-inferred",
-    "项目一句话定位",
-    "高风险缺口 Top 5",
-    "防守型回答策略",
-    "材料修复清单",
+    "**One-sentence positioning**",
+    "**Top 5 high-risk gaps**",
+    "**Safe answer strategies**",
+    "**Material repair checklist**",
 ]
 REQUIRED_TEMPLATE_TOKENS = {
     "assets/project-summary.template.md": ["Claim-Evidence Summary", "Evidence label"],
@@ -85,7 +88,7 @@ def find_repo_root(path: Path | None) -> Path:
 
 
 def collect_files(root: Path) -> list[Path]:
-    ignored = {".git", ".venv", "__pycache__", ".pytest_cache"}
+    ignored = {".git", ".venv", "__pycache__", ".pytest_cache", "tmp-agent-install", ".agent-skills", "agent-skills"}
     files: list[Path] = []
     for path in root.rglob("*"):
         if any(part in ignored for part in path.parts):
@@ -134,7 +137,7 @@ def validate_openai_yaml(root: Path, errors: list[str]) -> None:
         return
     openai_yaml = read_text(openai_path)
     for token in [
-        'display_name: "答辩挨打模拟器"',
+        'display_name: "项目答辩红队审查器"',
         "short_description:",
         "default_prompt:",
         "$defense-beating-simulator",
@@ -142,6 +145,24 @@ def validate_openai_yaml(root: Path, errors: list[str]) -> None:
     ]:
         if token not in openai_yaml:
             errors.append(f"agents/openai.yaml missing token: {token}")
+
+
+def validate_agent_compatibility(root: Path, errors: list[str]) -> None:
+    checks = {
+        "AGENTS.md": ["Universal agent compatibility", "CLAUDE.md", "GEMINI.md", ".agents/skills"],
+        "CLAUDE.md": ["AGENTS.md", "SKILL.md", "Claim-Evidence Matrix"],
+        "GEMINI.md": ["AGENTS.md", "SKILL.md", "Claim-Evidence Matrix"],
+        "install.ps1": ['"codex", "generic", "project"', ".agents\\skills"],
+        "install.sh": ["codex|generic|project", ".agents/skills"],
+    }
+    for rel, tokens in checks.items():
+        path = root / rel
+        if not path.is_file():
+            continue
+        text = read_text(path)
+        for token in tokens:
+            if token not in text:
+                errors.append(f"{rel} missing compatibility token: {token}")
 
 
 def validate_templates(root: Path, errors: list[str]) -> None:
@@ -198,6 +219,7 @@ def validate(root: Path) -> list[str]:
 
     validate_skill_md(root, errors)
     validate_openai_yaml(root, errors)
+    validate_agent_compatibility(root, errors)
     validate_templates(root, errors)
     validate_evals(root, errors)
     validate_text_files(root, errors)
