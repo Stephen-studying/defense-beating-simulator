@@ -1,51 +1,56 @@
-# 项目答辩红队审查器 Agent Instructions
+# 针对性答辩模拟器 Agent Instructions
 
-Use this repository as a portable local agent skill for project defense red-team review. It is not Codex-only.
+Use this repository as a portable Project Defense Red-Team Skill. It works automatically only in agents that support `SKILL.md` discovery; other agents can still use it by reading the Markdown entrypoints explicitly.
 
-## Entrypoints
+## Canonical entrypoints
 
-- `AGENTS.md` for generic local agents that read project-level instructions.
-- `SKILL.md` for Codex/OpenAI Skill-compatible agents or any agent that can load detailed skill instructions.
-- `agents/openai.yaml` for Codex UI metadata only.
-- `CLAUDE.md` and `GEMINI.md` are thin compatibility entrypoints for agents that prefer product-specific project instruction filenames.
+- `SKILL.md`: canonical workflow and trigger metadata.
+- `AGENTS.md`: cross-agent orientation and repository-level instructions.
+- `agents/openai.yaml`: OpenAI/Codex UI metadata only.
+- `CLAUDE.md` and `GEMINI.md`: thin project-context entrypoints, not substitutes for installing `SKILL.md` into the agent's supported skill directory.
 
-## Universal agent compatibility
+## Supported discovery paths
 
-This skill is plain Markdown plus optional templates. It does not require a Codex-only runtime.
+| Agent host | User-level skill root | Project-level skill root |
+| --- | --- | --- |
+| Codex | `~/.codex/skills` | Agent-specific project configuration |
+| Shared Agent Skills alias | `~/.agents/skills` | `.agents/skills` |
+| Claude Code | `~/.claude/skills` | `.claude/skills` |
+| Gemini CLI | `~/.gemini/skills` or `~/.agents/skills` | `.gemini/skills` or `.agents/skills` |
+| GitHub Copilot | `~/.copilot/skills` or `~/.agents/skills` | `.github/skills`, `.claude/skills`, or `.agents/skills` |
 
-- If the agent supports a local skill directory, copy this repository into that directory and ask the agent to use `defense-beating-simulator`.
-- If the agent supports project-level instruction files, keep this repository in the project and ask the agent to read `AGENTS.md` first.
-- If the agent only supports custom prompts, paste or attach `SKILL.md` as the workflow instruction and load relevant files from `references/` only when needed.
-- If the agent has no automatic discovery, explicitly say: “Use the rules in `AGENTS.md` and `SKILL.md` from this repository.”
+Do not describe one neutral directory as universally discoverable. When automatic discovery is unavailable, ask the agent to read `SKILL.md` explicitly.
 
 ## Installation modes
 
-- Codex mode copies the skill to `CODEX_HOME/skills` or `~/.codex/skills`.
-- Generic mode copies the skill to `AGENT_SKILLS_HOME` or `~/.agent-skills`.
-- Project mode can copy the skill into a project-local `.agents/skills` directory when a tool expects project-scoped skills.
-- Agents without skill auto-discovery can still use this repository by reading `AGENTS.md` first and `SKILL.md` for the full workflow.
+- `codex`: install under `CODEX_HOME/skills` or `~/.codex/skills`.
+- `agents` or legacy alias `generic`: install under `AGENT_SKILLS_HOME` or `~/.agents/skills`.
+- `claude`: install under `~/.claude/skills`.
+- `gemini`: install under `~/.gemini/skills`.
+- `copilot`: install under `~/.copilot/skills`.
+- `project`: install into a caller-provided project skill root.
 
-## Default behavior
+The install scripts copy only runtime files: `SKILL.md`, compatibility entrypoints, `agents/`, `references/`, `assets/`, and `LICENSE`. Development files such as README, examples, evals, tests, CI, and packaging metadata must not be copied into an installed skill.
 
-- Return structured feedback directly in the conversation.
-- Start with a Claim-Evidence Matrix before generating hard questions.
-- Do not create Markdown files by default.
-- Create files only when the user explicitly asks to export, save, or generate a Markdown package.
+## Required behavior
 
-## Supporting resources
+- Return structured feedback directly in chat unless the user requests file export.
+- For every full review, use the seven-section order defined in `SKILL.md`, including in `严刑拷打` mode.
+- Start from a Claim-Evidence Matrix with separate `Evidence status` and `Risk basis` columns.
+- Include only claims present in the material or the user's own wording.
+- Mark reviewer inferences as `Risk-inferred`.
+- Use at most five high-risk gaps; never add filler to reach five.
 
-- `references/question-patterns.md` for role-based questions, high-pressure follow-up chains, and defense-material question patterns.
-- `references/project-rubrics.md` for risk ranking, answer scoring, data-source defense, contribution wording, and innovation reframing.
-- `references/domain-*.md` for project-type-specific red-team questions.
-- `assets/*.template.md` only when the user requests exported Markdown files.
+## Resource routing
 
-## Operating rules
+- Read one or more `references/domain-*.md` files based on project type.
+- Read `references/question-patterns.md` for role-specific follow-up chains.
+- Read `references/project-rubrics.md` for scoring, safe wording, contribution, novelty, and risk ranking.
+- Use `assets/*.template.md` only when the user explicitly asks for exported Markdown.
 
-- Ground all questions and answers in the supplied README, report, PPT text, code structure, data notes, figures, experiment tables, screenshots, or project summary.
-- Label important claims as `Material-supported`, `Material-implied`, `Material-missing`, or `Risk-inferred`.
-- Mark missing evidence as material not provided instead of inventing details.
+## Safety
+
 - Do not fabricate data sources, experiment results, code features, deployment status, or personal contributions.
-- Do not describe a showcase demo as a real deployed system unless the material proves it.
-- Do not turn team work into individual work.
-- Keep the high-pressure intensity label `严刑拷打`, but keep the actual questions professional and evidence-based.
-- Make the first response useful without file output: project positioning, Claim-Evidence Matrix, high-risk gaps, answer strategy, and concrete material repair actions.
+- Do not describe a showcase as a deployed system or course assumptions as measured data.
+- Do not turn team work into individual work or model modification into unsupported originality.
+- Use material-aware boundary statements instead of confident but unsupported claims.

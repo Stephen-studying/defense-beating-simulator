@@ -1,13 +1,35 @@
-must_include_when_triggered:
+must_include_for_full_review:
+  - "项目一句话定位"
   - "Claim-Evidence Matrix"
-  - "材料依据"
-  - "高风险"
-  - "稳妥回答"
-  - "修复建议"
+  - "高风险缺口"
+  - "连续追问链"
+  - "防守型回答策略"
+  - "材料修复清单"
+  - "答辩速查卡"
+
+required_matrix_headers:
+  - "Claim / 项目说法"
+  - "Evidence / 材料依据"
+  - "Evidence status / 证据状态"
+  - "Gap / 缺口"
+  - "Risk basis / 风险依据"
+  - "Risk"
+
+evidence_status_values:
   - "Material-supported"
+  - "Material-implied"
   - "Material-missing"
 
-must_not_overclaim:
+risk_basis_values:
+  - "Material-derived"
+  - "Risk-inferred"
+
+intensity_labels:
+  - "先热个身"
+  - "开始挑刺"
+  - "严刑拷打"
+
+must_not_assert_without_evidence:
   - "完全实现"
   - "真实部署"
   - "全部由我独立完成"
@@ -23,7 +45,7 @@ negative_prompts_should_not_focus_on:
 expected_default_order:
   - "项目一句话定位"
   - "Claim-Evidence Matrix"
-  - "高风险缺口 Top 5"
+  - "高风险缺口"
   - "连续追问链"
   - "防守型回答策略"
   - "材料修复清单"

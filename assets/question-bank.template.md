@@ -15,6 +15,8 @@
 - Q2:
 - Q3:
 - Evidence gap:
+- Evidence status:
+- Risk basis:
 - Risk:
 - Safe answer:
 - Required material repair:
@@ -25,6 +27,8 @@
 - Q2:
 - Q3:
 - Evidence gap:
+- Evidence status:
+- Risk basis:
 - Risk:
 - Safe answer:
 - Required material repair:
@@ -35,6 +39,8 @@
 - Q2:
 - Q3:
 - Evidence gap:
+- Evidence status:
+- Risk basis:
 - Risk:
 - Safe answer:
 - Required material repair:
@@ -45,15 +51,17 @@
 - Q2:
 - Q3:
 - Evidence gap:
+- Evidence status:
+- Risk basis:
 - Risk:
 - Safe answer:
 - Required material repair:
 
 ## 3. Question Table
 
-| ID | Role | Category | Risk | Question | Evidence basis | Likely follow-up | Safe answer strategy |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Q1 |  |  | High |  |  |  |  |
+| ID | Role | Category | Evidence status | Risk basis | Risk | Question | Evidence basis | Likely follow-up | Safe answer strategy |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Q1 |  |  |  |  | High |  |  |  |  |
 
 ## 4. Answer Strategy Notes
 

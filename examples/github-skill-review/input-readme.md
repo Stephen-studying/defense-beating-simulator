@@ -1,6 +1,6 @@
 # Input README: Agent Skill Review
 
-项目名称：项目答辩红队审查器
+项目名称：针对性答辩模拟器
 
 项目描述：一个 Agent Skill，用于审查项目答辩材料，生成追问、稳妥回答和材料修复建议。
 

@@ -1,7 +1,7 @@
 interface:
-  display_name: "项目答辩红队审查器"
-  short_description: "审查项目证据链，生成高风险追问、稳妥回答和材料修复建议。"
-  default_prompt: "请用 $defense-beating-simulator 审查我的项目答辩材料，先做 Claim-Evidence Matrix，再给出高风险追问、稳妥回答和修复建议。"
+  display_name: "针对性答辩模拟器"
+  short_description: "审查项目证据链，生成连续追问、稳妥回答与材料修复建议。"
+  default_prompt: "请用 $defense-beating-simulator 审查我的项目材料，先输出 Claim-Evidence Matrix，再给出高风险缺口、连续追问、稳妥回答和修复建议。"
 
 policy:
   allow_implicit_invocation: true

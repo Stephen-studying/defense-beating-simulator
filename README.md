@@ -2,271 +2,254 @@
 
 # 针对性答辩模拟器
 
-**面向多 Agent 的项目答辩证据链审查 Skill**
+**项目答辩证据链审查与连续追问 Agent Skill**
 
-先查项目材料有没有证据，再模拟老师连续追问，最后给出稳妥回答和材料修复建议。
+先核对“项目说法有没有证据”，再模拟评委追问，最后给出稳妥回答和材料修复动作。
 
-![license](https://img.shields.io/badge/license-MIT-111827)
-![skill](https://img.shields.io/badge/type-Agent%20Skill-2563eb)
-![agent](https://img.shields.io/badge/install-Codex%20%7C%20Generic%20%7C%20Project-16a34a)
-![language](https://img.shields.io/badge/language-%E4%B8%AD%E6%96%87%20%7C%20English-0f766e)
+[![许可证](https://img.shields.io/badge/许可证-MIT-111827)](LICENSE)
+[![类型](https://img.shields.io/badge/类型-Agent%20Skill-2563eb)](SKILL.md)
+[![兼容](https://img.shields.io/badge/兼容-Codex%20%7C%20Claude%20%7C%20Gemini%20%7C%20Copilot-16a34a)](#兼容性)
+[![验证](https://img.shields.io/badge/验证-Python%20标准库-0f766e)](#项目验证)
 
-[立即安装](#立即安装) ·
-[使用示例](#使用示例) ·
-[核心工作流](#核心工作流) ·
-[仓库结构](#仓库结构) ·
-[English](README.en.md)
+[核心能力](#核心能力) · [实际案例](#实际案例) · [快速开始](#快速开始) · [安装](#安装) · [仓库结构](#仓库结构) · [English](README.en.md)
 
 </div>
 
 ---
 
-- 项目答辩红队审查器不是普通的“答辩问题生成器”，而是一个面向学生项目、课程设计、科研原型、竞赛项目和 GitHub 展示项目的答辩红队 Skill。
-- 它会先审查 README、报告、PPT、代码结构、数据说明和结果图中的“说法 - 证据 - 缺口 - 风险”，再生成高风险追问链。
-- 它不会替用户编造数据、实验结果、部署状态或个人贡献，只帮助用户把项目边界讲清楚、讲稳妥。
-- 默认产物是直接在对话中反馈，不会一上来生成一堆零散 Markdown 文件；只有用户明确要求导出时才会写文件。
+## 30 秒看懂
 
-## 核心定位
-
-项目答辩红队审查器的重点不是“多问几个问题”，而是先判断材料能不能支撑用户的说法。
+`defense-beating-simulator` 不是普通的“答辩问题生成器”。它先审查 README、PPT、报告、代码结构、数据说明和结果图中的证据链，再决定哪些问题值得追问。
 
 ```text
-项目说法 -> 材料证据 -> 缺口定位 -> 风险分级 -> 连续追问 -> 稳妥回答 -> 材料修复
+项目说法 → 材料证据 → 证据缺口 → 答辩风险 → 连续追问 → 稳妥回答 → 材料修复
 ```
 
-这让它更适合真实答辩准备：用户不只知道老师可能问什么，还知道答辩前应该补哪些证据、哪些话不能说满。
+默认结果直接在对话中反馈，不会擅自生成一批 Markdown 文件。只有用户明确要求导出时，才使用 `assets/` 中的模板生成材料包。
 
-## 主要能力
+## 核心能力
 
-| 能力 | 解决的问题 |
+| 能力 | 具体作用 |
 | --- | --- |
-| 证据链矩阵 | 检查项目说法是否有 README、报告、PPT、代码或图表支撑 |
-| 高风险追问链 | 围绕数据来源、个人贡献、创新点、项目边界和可复现性连续追问 |
-| 防守型回答 | 用“承认边界 + 说明依据 + 强调贡献 + 后续改进”的方式组织回答 |
-| 材料修复清单 | 指出 README、PPT、报告、演示脚本和简历表述应该怎么补 |
-| 答辩速查卡 | 整理一句话定位、三点贡献、三个亮点、三个局限和高频追问 |
+| Claim-Evidence Matrix | 逐条核对项目说法与 README、PPT、报告、代码或图表证据 |
+| 高风险缺口 | 找出最容易被追问的数据、贡献、创新、边界与复现问题 |
+| 连续追问链 | 围绕同一缺口连续追问 2–4 层，而不是堆一串散题 |
+| 防守型回答 | 承认真实边界、说明已有依据、突出本人贡献，不替用户编造事实 |
+| 材料修复 | 明确应该补 README、PPT、报告、演示脚本还是简历表述 |
+| 回答评分 | 按正面回应、技术细节、证据、贡献边界和表达清晰度评分 |
 
-## 适合场景
+完整审查固定按以下顺序输出：
 
-- 课程设计、毕业设计、综合实践项目
-- 科研原型、创新创业项目、竞赛项目
-- 简历项目、保研复试项目经历、技术面试项目追问
-- GitHub 仓库展示、README 可复现性检查、项目说明优化
+1. 项目一句话定位
+2. Claim-Evidence Matrix
+3. 高风险缺口（最多 5 项）
+4. 连续追问链
+5. 防守型回答策略
+6. 材料修复清单
+7. 答辩速查卡
 
-## 不适合场景
+### 证据标签
 
-- 单纯润色演讲稿
-- 没有项目材料的泛泛模拟面试
-- 与项目证据链无关的职业规划问答
-- 替代导师、老师或评委的最终判断
-
-## 核心工作流
-
-1. **项目一句话定位**：先把项目说成最稳妥的版本，避免夸大。
-2. **证据链矩阵**：逐条标注 `Material-supported`、`Material-implied`、`Material-missing`、`Risk-inferred`。
-3. **高风险缺口 Top 5**：优先指出最容易扣分的问题。
-4. **连续追问链**：围绕每个高风险点连续追问 2 到 4 层。
-5. **防守型回答策略**：给出能承认边界、又不显得项目很弱的回答。
-6. **材料修复清单**：明确该补 README、PPT、报告、数据说明还是简历表述。
-7. **答辩速查卡**：最后整理成答辩前可快速复习的一页内容。
-
-## 提问强度
-
-```text
-先热个身 / 开始挑刺 / 严刑拷打
-```
-
-| 强度 | 适合阶段 | 追问方式 |
+| 维度 | 标签 | 含义 |
 | --- | --- | --- |
-| 先热个身 | 刚开始梳理项目 | 先确认项目能不能讲清楚，问题较友好 |
-| 开始挑刺 | 常规答辩准备 | 系统追问数据、方法、结果、贡献和创新 |
-| 严刑拷打 | 正式答辩前压测 | 集中攻击最容易扣分的薄弱点，并给出连续追问链 |
+| 证据状态 | `Material-supported` | 材料明确支持 |
+| 证据状态 | `Material-implied` | 材料仅间接暗示 |
+| 证据状态 | `Material-missing` | 材料出现了该说法，但没有给出支撑 |
+| 风险依据 | `Material-derived` | 风险直接来自材料矛盾、遗漏或限制 |
+| 风险依据 | `Risk-inferred` | 根据答辩经验推断，不能当作材料事实 |
 
-## 使用示例
+### 提问强度
 
-基础用法：
+| 等级 | 适合阶段 | 提问方式 |
+| --- | --- | --- |
+| 先热个身 | 初次梳理项目 | 先确认定位、材料和基础理解 |
+| 开始挑刺 | 常规答辩准备 | 系统追问数据、方法、结果、贡献和边界 |
+| 严刑拷打 | 正式答辩前压测 | 集中攻击最高风险缺口，进行多层连续追问 |
 
-```text
-请使用 defense-beating-simulator 帮我审查这个项目答辩材料。
-重点检查：
-1. 项目定位是否清楚
-2. 数据来源是否可信
-3. 个人贡献是否说得清楚
-4. 创新点是否容易被质疑
-5. README / PPT / 报告中还缺哪些证据
-```
-
-高压用法：
-
-```text
-请严厉模拟答辩老师，先做证据链矩阵，再指出高风险缺口，
-并围绕每个缺口连续追问 3 层。最后给出稳妥回答和材料修改建议。
-不要替我编造材料中没有的信息。
-```
-
-Codex 中可以这样调用：
-
-```text
-请用 $defense-beating-simulator 分析我的项目 README，
-场景为保研面试，强度选择“严刑拷打”。
-```
-
-其他 Agent 可以让它先读 `AGENTS.md`，再读 `SKILL.md`：
-
-```text
-请按照 defense-beating-simulator 的规则分析我的项目材料，
-重点拷问数据来源、个人贡献和创新点，直接在对话里反馈。
-```
+“严刑拷打”只提高问题锋利度，不降低证据标准，也不包含人身攻击。
 
 ## 实际案例
 
-<details>
-<summary>校园综合能源系统仿真展示平台</summary>
+以“校园综合能源系统源网荷储展示平台”为例。材料说明网页展示光伏、负荷、储能 SOC 和能量流，数据来自典型工况与课程假设，尚未提供真实校园数据、后端接口或优化模型。
 
-输入摘要：
+| Claim / 项目说法 | Evidence / 材料依据 | Evidence status / 证据状态 | Gap / 缺口 | Risk basis / 风险依据 | Risk |
+| --- | --- | --- | --- | --- | --- |
+| 网页能够展示源网荷储典型日运行状态 | 项目摘要中的功能说明 | `Material-missing` | 只有功能自述，缺少运行截图与复现步骤 | `Material-derived` | Medium |
+| 项目属于“仿真平台” | 项目名称与简介 | `Material-missing` | 未说明 SOC、功率平衡和调度结果如何计算 | `Material-derived` | High |
+| 数据来自典型工况与课程假设 | 项目摘要中的数据说明 | `Material-supported` | 缺少参数来源表和构造规则 | `Material-derived` | High |
+
+连续追问会从“数据是不是实测”继续追到“构造数据能支持什么结论”“换成真实数据需要重算哪些参数”“当前架构能否接入真实接口”。稳妥口径会明确：当前版本是课程设计场景下的运行展示与辅助分析平台，适合说明系统关系和典型趋势，不等同于工程级实时调度系统。
+
+[查看完整校园能源示例](examples/campus-energy-system/expected-output-chat.md) · [查看 YOLO 缺陷检测示例](examples/yolo-pv-defect-detection/expected-output-chat.md)
+
+## 快速开始
+
+基础审查：
 
 ```text
-项目使用 HTML/CSS/JavaScript 实现校园源网荷储可视化页面，
-展示光伏出力、负荷变化、储能 SOC 和能量流动画。
-数据来自典型日场景和课程设计假设，暂未接入真实校园运行数据。
+请使用 defense-beating-simulator 审查我的项目答辩材料。
+重点检查：项目定位、数据来源、个人贡献、创新点，以及 README / PPT / 报告中缺少的证据。
+默认直接在对话中反馈，不要生成文件。
 ```
 
-输出片段：
+高压审查：
 
 ```text
-项目一句话定位：
-更稳妥的说法是“面向课程设计场景的校园源网荷储运行展示与辅助分析平台”，
-不要直接说成“真实校园能源仿真系统”。
-
-证据链矩阵：
-| 项目说法 | 材料依据 | 证据标签 | 缺口 | 风险 |
-| --- | --- | --- | --- | --- |
-| 平台展示光伏、负荷、储能 SOC | README 功能描述和前端页面截图 | Material-supported | 需要补数据生成逻辑 | Medium |
-| 系统可用于校园真实能源优化 | 未看到真实数据、优化模型或部署证据 | Material-missing | 容易被追问是否夸大 | High |
-
-高风险追问：
-你的数据是实测数据还是构造数据？
-如果是构造数据，为什么结论还有意义？
-SOC 曲线是功率积分算出来的，还是预设曲线？
-
-稳妥回答：
-当前数据基于课程设计假设和典型日工况构造，主要用于展示源网荷储运行关系。
-它不能替代真实校园实测数据，也不能直接支撑工程部署结论。
-后续可以接入电表、光伏逆变器或公开负荷数据进行校准。
+请用“严刑拷打”强度模拟答辩老师。
+先做 Claim-Evidence Matrix，再指出高风险缺口，并围绕每个缺口连续追问 3 层。
+最后给出稳妥回答和材料修改建议，不要替我编造材料中没有的信息。
 ```
 
-</details>
+回答评分：
 
-## 立即安装
+```text
+下面是老师的问题和我的回答。请先指出回答依赖了哪些材料证据，再按 100 分制评分，
+标出夸大或回避问题的句子，给出一版更稳妥的回答，并补一个最可能的追问。
+```
 
-### Codex
+## 适用范围
+
+适合：
+
+- 课程设计、毕业设计、综合实践项目
+- 科研原型、竞赛项目、算法实验项目
+- 保研复试、简历项目、技术面试
+- GitHub 项目展示、README 和可复现性检查
+
+不适合：
+
+- 单纯润色演讲稿或生成通用面试题
+- 没有项目材料的职业规划建议
+- 与项目证据链无关的学术科普
+- 替代导师、老师或真实评委的最终判断
+
+## 兼容性
+
+这是一个可移植的 `SKILL.md` 项目，不绑定单一 Agent。只要 Agent 支持技能目录，或能够按要求读取本地指令文件，就可以使用。
+
+| Agent / 方式 | 默认目录 | 安装参数 |
+| --- | --- | --- |
+| Codex | `~/.codex/skills` | `codex` |
+| 共享 Agent Skills | `~/.agents/skills` | `agents` |
+| Claude Code | `~/.claude/skills` | `claude` |
+| Gemini CLI | `~/.gemini/skills` | `gemini` |
+| GitHub Copilot CLI | `~/.copilot/skills` | `copilot` |
+| 项目内共享 | `<项目>/.agents/skills` | `project` |
+
+目录依据可查阅 [Claude Agent Skills](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)、[Gemini CLI Agent Skills](https://geminicli.com/docs/cli/using-agent-skills/) 和 [GitHub Copilot Agent Skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) 官方文档。
+
+不同 Agent 的自动发现规则仍可能随版本变化。如果技能没有被自动触发，请明确提到 `defense-beating-simulator`，或让 Agent 依次读取：
+
+```text
+AGENTS.md → SKILL.md → references/中与项目类型对应的文件
+```
+
+`generic` 参数作为旧命令兼容别名保留，实际与 `agents` 一样安装到 `~/.agents/skills`。
+
+## 安装
+
+先克隆仓库并进入目录：
+
+```bash
+git clone https://github.com/Stephen-studying/defense-beating-simulator.git
+cd defense-beating-simulator
+```
+
+Windows PowerShell：
 
 ```powershell
+# Codex
 powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent codex -Force
+
+# Claude Code；也可改为 agents / gemini / copilot
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent claude -Force
 ```
 
+macOS / Linux：
+
 ```bash
+# Codex
 sh install.sh --agent codex --force
+
+# 共享 Agent Skills；也可改为 claude / gemini / copilot
+sh install.sh --agent agents --force
 ```
 
-### 通用本地 Agent
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent generic -Force
-```
+Gemini CLI 也可以使用原生命令从仓库安装：
 
 ```bash
-sh install.sh --agent generic --force
+gemini skills install https://github.com/Stephen-studying/defense-beating-simulator
 ```
 
-### 项目级 Agent
-
-如果某个 Agent 会读取项目内的 `.agents/skills`，可以把本仓库安装到项目目录：
+项目内安装必须显式指定另一个项目的技能目录：
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent project -Destination "D:\YourProject\.agents\skills" -Force
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 `
+  -Agent project -Destination "D:\YourProject\.agents\skills" -Force
 ```
 
-```bash
-sh install.sh --agent project --dest "$HOME/your-project/.agents/skills" --force
-```
-
-注意：`project` 模式的目标目录应该是“另一个项目”的 `.agents/skills`，不要指向本仓库自己的子目录。
-
-默认安装位置：
-
-```text
-Codex:   ~/.codex/skills/defense-beating-simulator
-Generic: ~/.agent-skills/defense-beating-simulator
-Project: <your-project>/.agents/skills/defense-beating-simulator
-```
-
-如果你的 Agent 使用 `.agents/skills`，也可以手动复制到：
-
-```text
-$HOME/.agents/skills/defense-beating-simulator
-项目目录/.agents/skills/defense-beating-simulator
-```
-
-如果 Agent 不支持自动发现，只要让它按顺序读取：
-
-```text
-AGENTS.md -> SKILL.md -> references/按项目类型选择
-```
+安装脚本只复制运行所需的 `SKILL.md`、Agent 入口、`references/`、`assets/` 和许可证，不会把测试、示例、CI 或开发缓存复制到用户技能目录。
 
 ## 仓库结构
 
 ```text
 defense-beating-simulator/
-├── SKILL.md                  # Skill 入口和完整工作流
-├── AGENTS.md                 # 通用 Agent 入口
-├── CLAUDE.md                 # Claude 类 Agent 的薄入口
-├── GEMINI.md                 # Gemini 类 Agent 的薄入口
-├── agents/openai.yaml        # Codex 展示信息
-├── references/               # 追问模式、评分规则和领域问题库
-├── assets/                   # 用户要求导出时使用的模板
-├── examples/                 # 校园能源、YOLO 检测等示例
-├── evals/                    # 触发与输出结构回归提示集
-├── scripts/                  # 无第三方依赖的验证脚本
-├── tests/                    # 基础测试
-├── install.ps1               # Windows 安装脚本
-├── install.sh                # macOS / Linux 安装脚本
-└── README.md                 # GitHub 主页
+├── SKILL.md                   # 唯一规范：触发、流程、证据标签和安全边界
+├── AGENTS.md                  # 通用 Agent 入口与安装目录说明
+├── CLAUDE.md                  # Claude Code 薄入口
+├── GEMINI.md                  # Gemini CLI 薄入口
+├── agents/openai.yaml         # Codex 展示与默认调用信息
+├── references/                # 通用规则与五类项目专用追问库
+├── assets/                    # 用户明确要求导出时使用的模板
+├── examples/                  # 校园能源、YOLO 和 GitHub 审查示例
+├── evals/                     # 触发、结构与防夸大回归用例
+├── scripts/                   # 包结构验证与回答结果检查
+├── tests/                     # 标准库单元测试
+├── install.ps1               # Windows 安装器
+└── install.sh                 # macOS / Linux 安装器
 ```
 
-## 验证
+## 项目验证
 
-本仓库不需要第三方 Python 依赖。
+仓库验证不依赖第三方 Python 包：
 
 ```bash
 python scripts/validate_skill.py
 python -m unittest discover -s tests
 ```
 
-## 项目边界
+保存一次 Agent 回答后，可用回归规则检查输出结构：
 
-- 不能保证答辩一定通过。
-- 不能验证材料里没有提供的事实。
-- 不应编造数据来源、实验结果、部署状态或个人贡献。
-- 输出是答辩准备辅助，不替代导师反馈或真实评委判断。
+```bash
+python scripts/evaluate_response.py --eval-id explicit_01 --response response.md
+```
 
-## 推荐仓库信息
+GitHub Actions 会在 Linux 和 Windows 上验证 Skill 结构、Python 打包、单元测试与安装脚本的实际复制结果。
 
-建议 GitHub About 描述：
+## 安全边界
+
+- 不编造数据来源、实验结果、代码功能或部署状态。
+- 不把展示型 Demo 说成真实部署系统。
+- 不把课程假设数据说成实测数据。
+- 不把团队成果全部说成个人成果。
+- 不把模型微调或模块替换包装成原创模型。
+- 不保证答辩通过，输出只是准备辅助，不能替代导师反馈和真实评委判断。
+
+## GitHub 信息建议
+
+建议 About 描述：
 
 ```text
-A portable Agent Skill for project defense review: evidence-gap audit, high-pressure follow-up questions, safe answer strategies, and material repair suggestions.
+A portable Agent Skill for evidence-first project defense review, follow-up questioning, answer scoring, and material repair.
 ```
 
 建议 Topics：
 
 ```text
-codex
-agent-skills
-defense-preparation
-academic-defense
-interview-prep
-project-review
-red-team
-student-projects
+agent-skills  academic-defense  defense-preparation  project-review
+interview-prep  red-team  codex  claude-code  gemini-cli  github-copilot
 ```
+
+## 许可证
+
+[MIT License](LICENSE)

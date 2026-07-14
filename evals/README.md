@@ -1,14 +1,21 @@
 # Skill Evals
 
-This directory contains lightweight evaluation prompts for checking whether the skill is triggered in the right situations and whether the output contains the expected defense-review structure.
+This directory contains regression prompts for trigger coverage and output-contract checks.
 
-The evals are not automated model benchmarks. They are regression prompts for maintainers to manually or semi-automatically check behavior after changing `SKILL.md`, references, or templates.
+## What is automated
 
-## Files
+- `scripts/validate_skill.py` parses `prompts.csv` and `expected_checks.yaml` with the Python standard library.
+- Unit tests verify positive, focused, and negative prompts; matrix headers; evidence/risk labels; output order; examples; and installation metadata.
+- `scripts/evaluate_response.py` can check a captured Agent response against one eval row.
 
-- `prompts.csv`: trigger and non-trigger prompts across Chinese, English, README review, PPT review, resume project review, course design, AI projects, web demos, engineering simulation, and research prototypes.
-- `expected_checks.yaml`: strings and behaviors that maintainers should check in triggered and non-triggered outputs.
+Example:
 
-## Review rule
+```bash
+python scripts/evaluate_response.py --eval-id explicit_01 --response response.md
+```
 
-A triggered output should start from evidence review, not from a generic list of questions.
+## What still requires a live Agent
+
+These checks do not call a model in CI. Before a release, run at least one campus-energy prompt and one AI-project prompt in fresh Agent sessions, save the responses, and evaluate them with the script. A full review must contain all seven sections in order; a focused review may return only the relevant evidence row and requested coaching.
+
+Do not treat a green structural CI run as proof that every Agent host will trigger or follow the skill identically.

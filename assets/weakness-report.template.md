@@ -8,9 +8,9 @@
 
 ## 2. Weakness Table
 
-| Risk | Weak Point | Material Evidence | Why It Is Dangerous | Repair Action | Safer Wording |
-| --- | --- | --- | --- | --- | --- |
-| High | 数据来源未说明 | README 未看到数据来源小节 | 老师可能连续追问数据真实性，导致结论可信度下降 | 新增“数据来源与假设”小节 | 当前数据基于典型工况构造，主要用于趋势展示 |
+| Risk | Weak Point | Material Evidence | Evidence Status | Risk Basis | Why It Is Dangerous | Repair Action | Safer Wording |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| High | 数据来源未说明 | README 未看到数据来源小节 | Material-missing | Material-derived | 老师可能连续追问数据真实性，导致结论可信度下降 | 新增“数据来源与假设”小节 | 当前数据基于典型工况构造，主要用于趋势展示 |
 
 ## 3. Top Repair Actions
 

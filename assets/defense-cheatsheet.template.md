@@ -18,16 +18,17 @@
 
 ## 4. High-risk Questions
 
-| Question | Key Point | Safe Answer |
-| --- | --- | --- |
-|  |  |  |
+| Question | Evidence Status | Risk Basis | Key Point | Safe Answer |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
 
-## 5. Evidence Labels to Remember
+## 5. Evidence and Risk Labels to Remember
 
 - Material-supported:
 - Material-implied:
 - Material-missing:
-- Risk-inferred:
+- Material-derived risk:
+- Risk-inferred risk:
 
 ## 6. Final 30-second Summary
 

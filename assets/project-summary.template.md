@@ -14,7 +14,7 @@
 
 ## 3. Project Facts
 
-| Item | Content | Evidence label | Material source |
+| Item | Content | Evidence status | Material source |
 | --- | --- | --- | --- |
 | Project name |  |  |  |
 | Project type |  |  |  |
@@ -26,9 +26,9 @@
 
 ## 4. Claim-Evidence Summary
 
-| Claim | Evidence | Evidence label | Gap | Risk |
-| --- | --- | --- | --- | --- |
-|  |  | Material-supported / Material-implied / Material-missing / Risk-inferred |  | High / Medium / Low |
+| Claim | Evidence | Evidence status | Gap | Risk basis | Risk |
+| --- | --- | --- | --- | --- | --- |
+|  |  | Material-supported / Material-implied / Material-missing |  | Material-derived / Risk-inferred | High / Medium / Low |
 
 ## 5. Safe Positioning
 
@@ -48,4 +48,4 @@
 
 1. 
 2. 
-3. 
+3.

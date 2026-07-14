@@ -4,8 +4,11 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  validate:
+  linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,3 +19,34 @@ jobs:
         run: python scripts/validate_skill.py
       - name: Run tests
         run: python -m unittest discover -s tests
+      - name: Test Python package and command
+        run: |
+          python -m pip install .
+          defense-skill-validate .
+      - name: Check shell installer
+        run: |
+          sh -n install.sh
+          sh install.sh --agent agents --dest "$RUNNER_TEMP/runtime-skills"
+          test -f "$RUNNER_TEMP/runtime-skills/defense-beating-simulator/SKILL.md"
+          test ! -f "$RUNNER_TEMP/runtime-skills/defense-beating-simulator/README.md"
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate skill package
+        run: python scripts/validate_skill.py
+      - name: Run tests
+        run: python -m unittest discover -s tests
+      - name: Check PowerShell installer
+        shell: pwsh
+        run: |
+          $destination = Join-Path $env:RUNNER_TEMP "runtime-skills"
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Agent agents -Destination $destination
+          if ($LASTEXITCODE -ne 0) { throw "install.ps1 failed with exit code $LASTEXITCODE" }
+          $target = Join-Path $destination "defense-beating-simulator"
+          if (-not (Test-Path (Join-Path $target "SKILL.md"))) { throw "SKILL.md was not installed" }
+          if (Test-Path (Join-Path $target "README.md")) { throw "Development files leaked into runtime install" }

@@ -2,14 +2,39 @@
 
 Use this reference for risk ranking, evidence labeling, answer scoring, safe wording, data-source defense, innovation reframing, and contribution statements.
 
-## Evidence labels
+## Contents
+
+- Evidence and risk labels
+- Risk rubric
+- Weakness dimensions
+- Reference answer frame
+- Data-source defense logic
+- Innovation rubric
+- Answer scoring rubric
+- Contribution statement frame
+
+## Evidence and risk labels
+
+Do not mix evidence status with risk origin. A claim can have one evidence status and a separate risk basis.
+
+### Evidence status
 
 | Label | Meaning | How to use |
 | --- | --- | --- |
-| Material-supported | The material explicitly supports the claim. | Cite the README section, PPT page, report paragraph, code directory, data table, screenshot, or result figure. |
+| Material-supported | The material contains direct, checkable support or explicitly establishes a scope or limitation. | Cite the README section, PPT page, report paragraph, code directory, data table, screenshot, or result figure. |
 | Material-implied | The material suggests the claim but does not state it clearly. | Treat it as uncertain and ask for clarification or repair. |
-| Material-missing | The material does not provide evidence. | Do not present the claim as true; propose a material repair. |
-| Risk-inferred | The risk is inferred from defense experience. | Mark it as a likely defense risk, not a fact from the material. |
+| Material-missing | The material makes or relies on the claim but does not provide corroborating evidence. | Do not present the claim as established; propose a material repair. |
+
+### Risk basis
+
+| Label | Meaning | How to use |
+| --- | --- | --- |
+| Material-derived | The risk follows directly from supplied material, contradiction, omission, or stated limitation. | Cite the exact material location. |
+| Risk-inferred | The risk is inferred from defense experience. | Mark it as a likely question or weakness, not a material fact. |
+
+A sentence asserting a feature, result, novelty, deployment, or personal contribution identifies the claim; it does not prove the claim. Require code, screenshots, formulas, logs, tables, figures, commits, or reproducible behavior before treating those claims as supported. Explicit scope and limitation statements can be supported by the statement itself when the review only needs to establish that boundary.
+
+Do not add a claim the user never made merely to assign `Material-missing`. Put hypothetical overclaiming under the risk section instead. When material evidence and reviewer inference both contribute to one risk, label it `Material-derived + Risk-inferred`.
 
 ## Risk rubric
 

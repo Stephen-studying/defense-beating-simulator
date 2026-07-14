@@ -1,12 +1,14 @@
-# 项目答辩红队审查器
+# 针对性答辩模拟器
 
-This repository is a portable Agent Skill for project defense red-team review.
+Use this file as a thin Claude project-context entrypoint.
 
-Use this file as a thin compatibility entrypoint. The canonical instructions are:
+When the user asks for project-defense review, graduate-interview questioning, evidence-gap analysis, answer scoring, or material repair:
 
-1. Read `AGENTS.md` first for cross-agent operating rules.
-2. Read `SKILL.md` for the complete defense-review workflow.
-3. Load files from `references/` only when the project type requires them.
-4. Use `assets/` templates only when the user explicitly asks to export Markdown files.
+1. Read `SKILL.md` as the canonical workflow.
+2. Load only the relevant files from `references/`.
+3. Return the mandatory evidence-first structure directly in chat.
+4. Use `assets/` only when the user explicitly requests exported files.
 
-Default behavior: return structured feedback directly in chat, starting with a Claim-Evidence Matrix. Do not invent data sources, experiment results, deployment status, code features, or personal contributions.
+For automatic Claude Code skill discovery, install this directory under `~/.claude/skills/defense-beating-simulator` or `.claude/skills/defense-beating-simulator`. Merely keeping this file inside another skill directory does not guarantee discovery.
+
+Never invent data, results, code capabilities, deployment status, or personal contribution.
